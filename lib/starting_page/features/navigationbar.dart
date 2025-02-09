@@ -4,7 +4,7 @@ class BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 75,
+      height: MediaQuery.of(context).size.height * 0.11,
       decoration: BoxDecoration(
         color:
             const Color.fromARGB(200, 50, 50, 50), // Setze die Hintergrundfarbe
@@ -12,7 +12,7 @@ class BottomNavigation extends StatelessWidget {
           BoxShadow(
             color: Colors.black26,
             offset: Offset(0, -1),
-            blurRadius: 5,
+            blurRadius: 5
           ),
         ],
       ),
