@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MapDrivingPage extends StatelessWidget {
   final String imagePath;
@@ -8,6 +9,11 @@ class MapDrivingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Driving Page'),

@@ -4,6 +4,7 @@ import 'package:speedpilot/map_page/map_scrolling_page.dart';
 class Devices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Options(),
       backgroundColor: const Color.fromARGB(200, 25, 25, 25),
@@ -22,7 +23,7 @@ class Options extends StatelessWidget {
       itemCount: options.length,
       itemBuilder: (context, index) {
         return Container(
-            height: 150,
+            height: MediaQuery.of(context).size.height * 0.175,
             child: Card(
               color: const Color.fromARGB(200, 35, 35, 35),
               margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -69,8 +70,7 @@ class Options extends StatelessWidget {
                         ],
                       ),
                       Image.asset(
-                        './assets/images/PfuschMobil.png',
-                        height: 100,
+                        'assets/images/PfuschMobil.png'
                       ),
                     ],
                   ),

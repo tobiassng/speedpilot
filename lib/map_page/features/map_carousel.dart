@@ -41,6 +41,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 40),
         Expanded(
           child: PageView.builder(
             controller: _pageController,
@@ -89,6 +90,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
       margin: EdgeInsets.symmetric(
           vertical: margin, horizontal: 10), // Engere Seitenabstände
       child: Column(
+
         children: [
           Card(
             color: const Color.fromARGB(200, 25, 25, 25),
@@ -98,7 +100,8 @@ class _CustomCarouselState extends State<CustomCarousel> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15.0),
               child: SizedBox(
-                height: 300, // Größere Bildhöhe
+                height: MediaQuery.of(context).size.height * 0.51, // Größere Bildhöhe
+                width: MediaQuery.of(context).size.width * 0.6,
                 child: Image.asset(
                   images[index]['image']!,
                   fit: BoxFit.cover,
@@ -111,7 +114,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
             images[index]['caption']!,
             style: TextStyle(
               color: Colors.white, // Weiße Schrift
-              fontSize: 20, // Größere Schriftgröße
+              fontSize: 20, // Größere‚ Schriftgröße
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -129,7 +132,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
       child: Container(
         width: 12,
         height: 12,
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 13),
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 20),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: _currentPage == index
