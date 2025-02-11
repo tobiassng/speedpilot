@@ -10,14 +10,13 @@ class StartingPage extends StatelessWidget {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
     ]);
     return Scaffold(
       bottomNavigationBar: BottomNavigation(),
       body: Devices(),
 
       backgroundColor: const Color.fromARGB(
-          200, 25, 25, 25), // Hintergrundfarbe des Scaffold
+          200, 25, 25, 25),
     );
   }
 }

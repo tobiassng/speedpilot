@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-
 class Tachometer extends StatefulWidget {
   @override
   _TachometerState createState() => _TachometerState();
@@ -38,6 +37,9 @@ class _TachometerState extends State<Tachometer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.4,
+      width: MediaQuery.of(context).size.width * 0.4,
+
       child: SfRadialGauge(
         axes: <RadialAxis>[
           RadialAxis(
@@ -49,8 +51,8 @@ class _TachometerState extends State<Tachometer> {
                 endValue: 150,
                 gradient: SweepGradient(
                   colors: [
-                    Colors.purple.shade700,
-                    Colors.pink.shade600,
+                    Colors.red.shade300,
+                    Colors.red.shade900,
                   ],
                   stops: [0.0, 1.0],
                 ),

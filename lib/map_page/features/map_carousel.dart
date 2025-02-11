@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:speedpilot/driving_page/map_driving_page.dart'; // Fügen Sie hier den korrekten Pfad zu Ihrer Datei hinzu
+import 'package:speedpilot/driving_page/map_driving_page.dart'; 
 import 'package:speedpilot/driving_page/no_map_driving_page.dart';
 
 class CustomCarousel extends StatefulWidget {
@@ -9,7 +9,7 @@ class CustomCarousel extends StatefulWidget {
 
 class _CustomCarouselState extends State<CustomCarousel> {
   final PageController _pageController =
-      PageController(viewportFraction: 0.7); // Etwas engerer Abstand
+      PageController(viewportFraction: 0.7); 
   int _currentPage = 0;
 
   final List<Map<String, String>> images = [
@@ -70,7 +70,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
           ),
         ),
         SizedBox(
-            height: 10), // Weniger Abstand zwischen den Bildern und den Punkten
+            height: 10), 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(images.length, (index) {
@@ -82,17 +82,20 @@ class _CustomCarouselState extends State<CustomCarousel> {
   }
 
   Widget buildImage(int index) {
-    bool active = index == _currentPage;
-    double margin = active ? 10 : 20; // Etwas engerer Abstand
 
+  
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       margin: EdgeInsets.symmetric(
-          vertical: margin, horizontal: 10), // Engere Seitenabstände
+        vertical: MediaQuery.of(context).size.height * 0.22, 
+        horizontal: 10, 
+      ),
       child: Column(
 
         children: [
           Card(
+            elevation: 8.0, 
+            shadowColor: Colors.black.withOpacity(0.5),
             color: const Color.fromARGB(200, 25, 25, 25),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
@@ -100,7 +103,8 @@ class _CustomCarouselState extends State<CustomCarousel> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15.0),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.51, // Größere Bildhöhe
+            
+                height: MediaQuery.of(context).size.height * 0.3, 
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Image.asset(
                   images[index]['image']!,
@@ -109,12 +113,12 @@ class _CustomCarouselState extends State<CustomCarousel> {
               ),
             ),
           ),
-          SizedBox(height: 10), // Abstand zwischen Bild und Unterschrift
+          SizedBox(height: 10), 
           Text(
             images[index]['caption']!,
             style: TextStyle(
-              color: Colors.white, // Weiße Schrift
-              fontSize: 20, // Größere‚ Schriftgröße
+              color: Colors.white, 
+              fontSize: 20, 
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -132,12 +136,12 @@ class _CustomCarouselState extends State<CustomCarousel> {
       child: Container(
         width: 12,
         height: 12,
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 50),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: _currentPage == index
               ? Colors.white
-              : Colors.grey, // Weiße Punkte
+              : Colors.grey, 
         ),
       ),
     );

@@ -59,7 +59,7 @@ class Options extends StatelessWidget {
                                   blurRadius: 20,
                                   offset: Offset(0, 0),
                                 )
-                              ], // Leuchtfarbe
+                              ], 
                             ),
                           ),
                           SizedBox(width: 20),

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 class MapDrivingPage extends StatelessWidget {
   final String imagePath;
 
-  // Korrigierter Konstruktor mit Initialisierung und Schlüssel
   const MapDrivingPage({Key? key, required this.imagePath}) : super(key: key);
 
   @override
