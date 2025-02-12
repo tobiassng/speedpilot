@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 
-class JoystickPage extends StatefulWidget {
+class GasJoystickPage extends StatefulWidget {
   @override
-  _JoystickPageState createState() => _JoystickPageState();
+  _GasJoystickPageState createState() => _GasJoystickPageState();
 }
 
-class _JoystickPageState extends State<JoystickPage> {
+class _GasJoystickPageState extends State<GasJoystickPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
         child: Joystick(
-          mode: JoystickMode.horizontal,
+          mode: JoystickMode.vertical,
           base: JoystickBase(
-            mode: JoystickMode.horizontal,
+            mode: JoystickMode.vertical,
             decoration: JoystickBaseDecoration(
               drawOuterCircle: false,
               color: Color.fromARGB(200, 25, 25, 25),

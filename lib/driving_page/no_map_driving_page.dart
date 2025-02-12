@@ -3,6 +3,7 @@ import 'package:speedpilot/map_page/map_scrolling_page.dart';
 import './features/tachometer.dart';
 import 'package:flutter/services.dart';
 import './features/steering_joystick.dart';
+import './features/gas_joystick.dart';
 
 class NoMapDrivingPage extends StatelessWidget {
   @override
@@ -25,11 +26,16 @@ class NoMapDrivingPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 0,
+            bottom: 7,
             right: 40,
             
               child: JoystickPage()),
           // FloatingActionButton oben links
+          Positioned(
+            bottom: 10,
+            left: 40,
+              child: GasJoystickPage()
+          ),
           Positioned(
             top: 20,
             left: 50,

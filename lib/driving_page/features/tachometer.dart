@@ -44,11 +44,11 @@ class _TachometerState extends State<Tachometer> {
         axes: <RadialAxis>[
           RadialAxis(
             minimum: 0,
-            maximum: 150,
+            maximum: 20,
             ranges: <GaugeRange>[
               GaugeRange(
                 startValue: 0,
-                endValue: 150,
+                endValue: 20,
                 gradient: SweepGradient(
                   colors: [
                     Colors.red.shade300,
@@ -57,7 +57,7 @@ class _TachometerState extends State<Tachometer> {
                   stops: [0.0, 1.0],
                 ),
                 startWidth: 15,
-                endWidth: 15,
+                endWidth: 15, 
               ),
             ],
             pointers: <GaugePointer>[
@@ -66,7 +66,7 @@ class _TachometerState extends State<Tachometer> {
                 needleLength: 0.8,
                 lengthUnit: GaugeSizeUnit.factor,
                 needleStartWidth: 0,
-                needleEndWidth: 10,
+                needleEndWidth: 5,
                 needleColor: Colors.white.withOpacity(0.7),
                 knobStyle: KnobStyle(
                   color: Colors.transparent,
@@ -82,8 +82,8 @@ class _TachometerState extends State<Tachometer> {
                   child: Text(
                     _currentValue.toStringAsFixed(1),
                     style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
                       color: Colors.white,
                     ),
                   ),
@@ -96,7 +96,7 @@ class _TachometerState extends State<Tachometer> {
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-            interval: 10,
+            interval: 2,
           ),
         ],
       ),
