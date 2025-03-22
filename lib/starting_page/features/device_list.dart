@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:speedpilot/map_page/map_scrolling_page.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
+import 'dart:io';
 
 class Devices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Options(),
       backgroundColor: const Color.fromARGB(200, 25, 25, 25),
@@ -12,11 +14,20 @@ class Devices extends StatelessWidget {
   }
 }
 
-class Options extends StatelessWidget {
+class Options extends StatefulWidget {
+  @override
+  _OptionsState createState() => _OptionsState();
+}
+
+class _OptionsState extends State<Options>  {
+  // Die Liste der Optionen (Du kannst sie nach Bedarf erweitern)
   final List<String> options = [
-    "",
+    "Option 1", // Beispiel-Option
   ];
 
+  // Variablen, um den Zustand der Farbe zu verfolgen
+  List<bool> hasBeenPressed = [false]; 
+  List<bool> isConnected = [false];
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -28,13 +39,27 @@ class Options extends StatelessWidget {
               color: const Color.fromARGB(200, 35, 35, 35),
               margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               child: InkWell(
-                onTap: () {
-                  if (index == 0) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MapScrolling()),
-                    );
+                onTap: () async {
+                  WebSocket connection = await WebSocket.connect('wss://echo.websocket.events');
+                    setState(() {
+                      // Setze die Farbe nur, wenn der Punkt noch nicht gedrückt wurde
+                      if (!hasBeenPressed[index]) {
+                        hasBeenPressed[index] = true;
+                      }
+                    });
+                    if (connection != 0)  {
+                        isConnected = [true];
+                        print("connected to server");
+                        if (index == 0) {
+                          await Future.delayed(Duration(seconds: 2));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapScrolling()),
+                          );
                   }
+                    };
+                  // Navigiere bei Index 0 (kannst du nach Bedarf ändern)
+                  
                 },
                 customBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
@@ -50,16 +75,18 @@ class Options extends StatelessWidget {
                             width: 24.0,
                             height: 30.0,
                             decoration: BoxDecoration(
-                              color: Colors.red, // Farbe des Punktes
+                              color: isConnected[index] ? Colors.green : (hasBeenPressed[index] ? Colors.orange : Colors.red), // Ändere nur beim ersten Klick
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.red.withOpacity(0.8),
+                                  color: isConnected[index]
+                                    ? Colors.green.withOpacity(0.8)  // Wenn verbunden, grüner Schatten
+                                    : (hasBeenPressed[index] ? Colors.orange.withOpacity(0.8) : Colors.red.withOpacity(0.8)), // Dynamische Schattenfarbe
                                   spreadRadius: 10,
                                   blurRadius: 20,
                                   offset: Offset(0, 0),
                                 )
-                              ], 
+                              ],
                             ),
                           ),
                           SizedBox(width: 20),
@@ -70,7 +97,7 @@ class Options extends StatelessWidget {
                         ],
                       ),
                       Image.asset(
-                        'assets/images/PfuschMobil.png'
+                        'assets/images/PfuschMobil.png',
                       ),
                     ],
                   ),
