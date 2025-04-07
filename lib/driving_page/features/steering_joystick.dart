@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:speedpilot/services/WebSocketManager.dart';
 
 class JoystickPage extends StatefulWidget {
   @override
@@ -25,7 +26,9 @@ class _JoystickPageState extends State<JoystickPage> {
             decoration: JoystickStickDecoration(
               color: Colors.red,
             ),
-          ), listener: (StickDragDetails details) {  },
+          ), listener: (StickDragDetails details) { 
+            WebSocketManager().sendDrivingData(details.x, details.y);
+            },
         ),
       
     );

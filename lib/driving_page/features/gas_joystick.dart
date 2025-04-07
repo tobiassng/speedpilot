@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:speedpilot/services/WebSocketManager.dart';
+import 'dart:convert';
 
 class GasJoystickPage extends StatefulWidget {
   @override
   _GasJoystickPageState createState() => _GasJoystickPageState();
 }
-
 class _GasJoystickPageState extends State<GasJoystickPage> {
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,9 @@ class _GasJoystickPageState extends State<GasJoystickPage> {
             decoration: JoystickStickDecoration(
               color: Colors.red,
             ),
-          ), listener: (StickDragDetails details) {  },
+          ), listener: (StickDragDetails details) { 
+            WebSocketManager().sendDrivingData(details.x, details.y);
+           },
         ),
       
     );

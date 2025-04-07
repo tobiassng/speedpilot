@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speedpilot/map_page/map_scrolling_page.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
+import 'package:speedpilot/services/WebSocketManager.dart';
 import 'dart:io';
 
 class Devices extends StatelessWidget {
@@ -22,9 +23,8 @@ class Options extends StatefulWidget {
 class _OptionsState extends State<Options>  {
   // Die Liste der Optionen (Du kannst sie nach Bedarf erweitern)
   final List<String> options = [
-    "Option 1", // Beispiel-Option
+    "SpeedPilot", // Beispiel-Option
   ];
-
   // Variablen, um den Zustand der Farbe zu verfolgen
   List<bool> hasBeenPressed = [false]; 
   List<bool> isConnected = [false];
@@ -40,16 +40,21 @@ class _OptionsState extends State<Options>  {
               margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               child: InkWell(
                 onTap: () async {
-                  WebSocket connection = await WebSocket.connect('wss://echo.websocket.events');
+                  try {
+                    await WebSocketManager().connect('ws://localhost:9090');
+                    print("WebSocket erfolgreich verbunden");
+                  } catch (error) {
+                    print("Fehler beim Verbinden: $error");
+                  }
                     setState(() {
                       // Setze die Farbe nur, wenn der Punkt noch nicht gedrückt wurde
                       if (!hasBeenPressed[index]) {
                         hasBeenPressed[index] = true;
                       }
                     });
+                    final connection = WebSocketManager().connection;
                     if (connection != 0)  {
                         isConnected = [true];
-                        print("connected to server");
                         if (index == 0) {
                           await Future.delayed(Duration(seconds: 2));
                           Navigator.push(
@@ -58,7 +63,6 @@ class _OptionsState extends State<Options>  {
                           );
                   }
                     };
-                  // Navigiere bei Index 0 (kannst du nach Bedarf ändern)
                   
                 },
                 customBorder: RoundedRectangleBorder(
