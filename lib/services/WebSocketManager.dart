@@ -33,7 +33,7 @@ class WebSocketManager {
       "y" : y
     };
     final String convertedJsonData = jsonEncode(jsonData);
-    WebSocketManager().sendMessage(jsonEncode(convertedJsonData));
+    WebSocketManager().sendMessage(convertedJsonData);
     print("sent message: $convertedJsonData");
   }
 
