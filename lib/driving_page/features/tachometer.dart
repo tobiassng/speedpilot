@@ -1,36 +1,21 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:speedpilot/services/WebSocketManager.dart';‚
 class Tachometer extends StatefulWidget {
   @override
   _TachometerState createState() => _TachometerState();
 }
 
 class _TachometerState extends State<Tachometer> {
-  double _currentValue = 0;
-  Timer? _timer;
+  double _currentValue = 5.8;
 
   @override
   void initState() {
     super.initState();
-    _startSimulation();
   }
-
-  void _startSimulation() {
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      setState(() {
-        if (_currentValue < 100) {
-          _currentValue++;
-        } else {
-          _timer?.cancel();
-        }
-      });
-    });
-  }
-
   @override
   void dispose() {
-    _timer?.cancel();
     super.dispose();
   }
 
@@ -44,11 +29,11 @@ class _TachometerState extends State<Tachometer> {
         axes: <RadialAxis>[
           RadialAxis(
             minimum: 0,
-            maximum: 20,
+            maximum: 10,
             ranges: <GaugeRange>[
               GaugeRange(
                 startValue: 0,
-                endValue: 20,
+                endValue: 10,
                 gradient: SweepGradient(
                   colors: [
                     Colors.red.shade300,

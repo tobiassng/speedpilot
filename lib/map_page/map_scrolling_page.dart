@@ -21,9 +21,8 @@ class MapScrolling extends StatelessWidget {
           Positioned(
             top: 50,
             left: 20,
-            child: FloatingActionButton(
-              child: Icon(Icons.navigate_before, color: Colors.white),
-              backgroundColor: const Color.fromARGB(255, 35, 35, 35),
+            child: IconButton(
+              icon: Icon(Icons.navigate_before, color: Colors.white),
               onPressed: () {
                 Navigator.pushReplacement(
                   context,

@@ -22,7 +22,10 @@ class WebSocketManager {
     _webSocket.add(message);
     print("Nachricht gesendet: $message");
   }
-
+  void listenSpeed(dynamic speed) {
+    _webSocket.listen(speed);
+    print("Nachricht empfangen: $speed");
+  }
   void closeConnection() {
     _webSocket.close();
     print("WebSocket-Verbindung geschlossen");

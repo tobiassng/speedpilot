@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:speedpilot/map_page/map_scrolling_page.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 import 'package:speedpilot/services/WebSocketManager.dart';
 import 'dart:io';
 
 class Devices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Options(),
-      backgroundColor: const Color.fromARGB(200, 25, 25, 25),
-    );
+    return 
+      Options();
+      
+    
   }
 }
 
@@ -34,6 +32,7 @@ class _OptionsState extends State<Options>  {
       itemCount: options.length,
       itemBuilder: (context, index) {
         return Container(
+            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
             height: MediaQuery.of(context).size.height * 0.175,
             child: Card(
               color: const Color.fromARGB(200, 35, 35, 35),
@@ -42,6 +41,9 @@ class _OptionsState extends State<Options>  {
                 onTap: () async {
                   try {
                     await WebSocketManager().connect('ws://localhost:9090');
+                    setState(() {
+                      isConnected = [true];
+                    });
                     print("WebSocket erfolgreich verbunden");
                   } catch (error) {
                     print("Fehler beim Verbinden: $error");

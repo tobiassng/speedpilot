@@ -4,6 +4,7 @@ import './features/tachometer.dart';
 import 'package:flutter/services.dart';
 import './features/steering_joystick.dart';
 import './features/gas_joystick.dart';
+import 'package:speedpilot/settings_page/settings_page.dart';
 
 class NoMapDrivingPage extends StatelessWidget {
   @override
@@ -21,9 +22,8 @@ class NoMapDrivingPage extends StatelessWidget {
           // Tachometer bleibt unten und zentriert
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
               child: Tachometer(),
-            ),
+          
           ),
           Positioned(
             bottom: 7,
@@ -40,9 +40,8 @@ class NoMapDrivingPage extends StatelessWidget {
           Positioned(
             top: 20,
             left: 50,
-            child: FloatingActionButton(
-              child: Icon(Icons.navigate_before, color: Colors.white),
-              backgroundColor: const Color.fromARGB(255, 35, 35, 35),
+            child: IconButton(
+              icon: Icon(Icons.navigate_before, color: Colors.white),
               onPressed: () {
                 SystemChrome.setPreferredOrientations([
                   DeviceOrientation.portraitUp,
