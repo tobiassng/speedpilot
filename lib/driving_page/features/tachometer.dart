@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:speedpilot/services/WebSocketManager.dart';‚
+import 'package:speedpilot/services/WebSocketManager.dart';
+
 class Tachometer extends StatefulWidget {
   @override
   _TachometerState createState() => _TachometerState();
 }
 
 class _TachometerState extends State<Tachometer> {
-  double _currentValue = 5.8;
-
-  @override
+  double _currentValue = 0.0;
   void initState() {
-    super.initState();
-  }
-  @override
-  void dispose() {
-    super.dispose();
+      super.initState();
+      WebSocketManager().listenSpeed((speed){
+        setState(() {
+          _currentValue = speed;
+        });
+      });
   }
 
   @override

@@ -22,22 +22,31 @@ class WebSocketManager {
     _webSocket.add(message);
     print("Nachricht gesendet: $message");
   }
-  void listenSpeed(dynamic speed) {
-    _webSocket.listen(speed);
-    print("Nachricht empfangen: $speed");
+  
+  void listenSpeed(void Function(double) onSpeedReceived) {
+    _webSocket.listen((data) {
+      final speed = double.tryParse(data.toString());
+      if (speed != null) {
+        onSpeedReceived(speed); 
+        print("Nachricht empfangen: $speed");
+      } else {
+        print("Ungültige Nachricht empfangen: $data");
+      }
+    });
   }
+
   void closeConnection() {
     _webSocket.close();
     print("WebSocket-Verbindung geschlossen");
   }
+
   void sendDrivingData(double x, double y) {
     final Map<String, dynamic> jsonData = {
-      "x" : x,
-      "y" : y
+      "x": x,
+      "y": y
     };
     final String convertedJsonData = jsonEncode(jsonData);
-    WebSocketManager().sendMessage(convertedJsonData);
+    sendMessage(convertedJsonData);
     print("sent message: $convertedJsonData");
   }
-
 }

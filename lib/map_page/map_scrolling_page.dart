@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './features/map_carousel.dart';
 import 'package:flutter/services.dart';
 import 'package:speedpilot/starting_page/starting_page.dart';
+import 'package:speedpilot/services/WebSocketManager.dart';
 
 class MapScrolling extends StatelessWidget {
   @override
@@ -24,6 +25,7 @@ class MapScrolling extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.navigate_before, color: Colors.white),
               onPressed: () {
+                WebSocketManager().closeConnection();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => StartingPage()),

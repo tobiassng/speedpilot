@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart'; 
 import "package:speedpilot/starting_page/starting_page.dart";
+import './features/settings_list.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -8,6 +9,10 @@ class Settings extends StatelessWidget {
       body: 
       Stack(
         children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: SettingsList(),    
+          ),
           Positioned(
             top: 60,
             left: 10,
