@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; 
-import "package:speedpilot/starting_page/starting_page.dart";
 import './features/settings_list.dart';
+import '../driving_page/no_map_driving_page.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -19,8 +19,9 @@ class Settings extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.navigate_before,color:Colors.white),
               onPressed: () {
-                Navigator.push(context,
-                MaterialPageRoute(builder: (context) => StartingPage()));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => NoMapDrivingPage()));
               },
       ))]
         ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:speedpilot/services/WebSocketManager.dart';
-import 'dart:convert';
+
+
+/// The class GasJoyStickPage contains the Joystick which is used to control the speed of the SpeedPilot Car
+/// The JoyStick Information are sent via Json with following syntax: {'x': bool, 'y': bool}
 
 class GasJoystickPage extends StatefulWidget {
   @override
@@ -29,10 +32,10 @@ class _GasJoystickPageState extends State<GasJoystickPage> {
           ), listener: (StickDragDetails details) { 
             WebSocketManager().sendDrivingData(details.x, details.y);
             print("${details.y} ${details.x}",);
-          
            },
         ),
       
     );
   }
+
 }
