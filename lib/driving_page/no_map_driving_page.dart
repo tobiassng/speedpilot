@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import './features/steering_joystick.dart';
 import './features/gas_joystick.dart';
 import 'package:speedpilot/settings_page/settings_page.dart';
+import '../driving_page/features/lidar_data.dart';
+import '../driving_page/features/lidar_data.dart';
+
 
 class NoMapDrivingPage extends StatelessWidget {
   @override
@@ -25,6 +28,15 @@ class NoMapDrivingPage extends StatelessWidget {
               child: Tachometer(),
           
           ),
+          // Align(
+          // alignment: Alignment.topCenter,
+          //  child: Container(
+          //   margin: const EdgeInsets.only(
+          //      top: 10,
+          //    ),
+          //    height: 225,
+          //    width: 225,
+          //    child: LidarScreen())),
           Positioned(
             bottom: 7,
             right: 40,
@@ -54,8 +66,8 @@ class NoMapDrivingPage extends StatelessWidget {
               },
             ),
           ),
+         
           
-          // Hier kannst du weitere Widgets hinzufügen, die platziert werden sollen
         
         ],
       ),

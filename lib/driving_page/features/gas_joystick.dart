@@ -28,6 +28,8 @@ class _GasJoystickPageState extends State<GasJoystickPage> {
             ),
           ), listener: (StickDragDetails details) { 
             WebSocketManager().sendDrivingData(details.x, details.y);
+            print("${details.y} ${details.x}",);
+          
            },
         ),
       

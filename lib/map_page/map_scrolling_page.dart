@@ -26,7 +26,7 @@ class MapScrolling extends StatelessWidget {
               icon: Icon(Icons.navigate_before, color: Colors.white),
               onPressed: () {
                 WebSocketManager().closeConnection();
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => StartingPage()),
                 );
