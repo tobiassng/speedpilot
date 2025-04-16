@@ -116,7 +116,7 @@ class _OptionsState extends State<Options> {
             margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             child: InkWell(
               onTap: () async {
-                String defaultUrl = 'ws://172.20.10.3:9090';
+                String defaultUrl = 'ws://localhost:9090';
                 final controller = TextEditingController(text: defaultUrl);
 
                 String? url = await showDialog<String>(
