@@ -40,10 +40,11 @@ class WebSocketManager {
     print("WebSocket-Verbindung geschlossen");
   }
 
-  void sendDrivingData(double x, double y) {
+  void sendDrivingData(String c, double x, double y ) {
     final Map<String, dynamic> jsonData = {
-      "x": x,
-      "y": y
+      "command": c,
+      "speed": x,
+      "angle": y
     };
     final String convertedJsonData = jsonEncode(jsonData);
     sendMessage(convertedJsonData);

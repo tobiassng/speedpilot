@@ -27,8 +27,8 @@ class _GasJoystickPageState extends State<GasJoystickPage> {
               color: Colors.red,
             ),
           ), listener: (StickDragDetails details) { 
-            WebSocketManager().sendDrivingData(details.x, details.y);
-            print("${details.y} ${details.x}",);
+
+            WebSocketManager().sendDrivingData('move',details.x, details.y);
           
            },
         ),

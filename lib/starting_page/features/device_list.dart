@@ -19,10 +19,42 @@ class _OptionsState extends State<Options> {
   final List<String> options = [
     "SpeedPilot", // Beispiel-Option
   ];
-  List<bool> hasBeenPressed = [false];
+    List<bool> hasBeenPressed = [false];
   List<bool> isConnected = [false];
+  List<bool> isAborted = [false];
   Timer? connectionTimer;
 
+  void showErrorDialog(BuildContext context, String message, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(200, 35, 35, 35),
+          title: Text(
+            'Fehler',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white70),
+          ),
+          actions: [
+            TextButton(
+              child: Text('OK', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  isAborted[index] = true;
+                  isConnected[index] = false;
+                  hasBeenPressed[index] = false;
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   Future<void> attemptConnection() async {
     bool connected = false;
     connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
