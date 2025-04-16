@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:speedpilot/map_page/map_scrolling_page.dart';
 import 'package:speedpilot/services/WebSocketManager.dart';
 import 'dart:async';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'dart:convert';
+
+/// A Device List with all possible vehicle options is beeing Implemented in this file
+/// This File will create a list of Cards aligned vertically
+/// By pressing the Card with the name "SpeedPilot", the system tries to connect to the WebSocket
+/// While that the Lightning Button inside the card will turn orange
+/// If the connection is successful within 20 seconds, the Lightning Button will turn green and a Navigation to the 
+/// MapPage in /map_page/map_scrolling_page.dart will be performed
+/// If the connection is not possible an errorlog will pop up 
+/// If the Device is connected to the WebSocket, the WebSocket will send a message to the Device which confirms the connection
 
 class Devices extends StatelessWidget {
   @override
@@ -19,7 +30,7 @@ class _OptionsState extends State<Options> {
   final List<String> options = [
     "SpeedPilot", // Beispiel-Option
   ];
-    List<bool> hasBeenPressed = [false];
+  List<bool> hasBeenPressed = [false];
   List<bool> isConnected = [false];
   List<bool> isAborted = [false];
   Timer? connectionTimer;
@@ -46,7 +57,6 @@ class _OptionsState extends State<Options> {
                 setState(() {
                   isAborted[index] = true;
                   isConnected[index] = false;
-                  hasBeenPressed[index] = false;
                 });
               },
             ),
@@ -57,6 +67,11 @@ class _OptionsState extends State<Options> {
   }
   Future<void> attemptConnection() async {
     bool connected = false;
+    Timer timeout = Timer(Duration(seconds: 20), (){
+      if (!connected) {
+        showErrorDialog(context, "Es ist ein Fehler aufgetreten, bitte überprüfen Sie ob das Auto hochgefahren ist",0);
+      }
+    });
     connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
       if (!connected) {
         try {
@@ -65,10 +80,18 @@ class _OptionsState extends State<Options> {
             isConnected = [true];
           });
           connected = true;
-          print("WebSocket erfolgreich verbunden");
           timer.cancel();
-
-          // Nach erfolgreicher Verbindung, die Seite wechseln
+          timeout.cancel();
+          WebSocketManager().receiveMessage((message) {
+            final data = jsonDecode(message);
+            if (data["type"] == "command") {
+              print("Kommando vom Server: ${data["speed"]}, ${data["status"]} ,${data["content"]}");
+            }
+            else{
+              print("fehler"); 
+            }
+              
+          });
           if (connected) {
             await Future.delayed((Duration(seconds: 2)));
             Navigator.push(
