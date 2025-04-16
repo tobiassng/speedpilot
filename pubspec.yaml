@@ -38,7 +38,6 @@ dependencies:
   flutter_joystick: ^0.2.1
   flutter_rviz: ^0.0.2
   web_socket_channel: ^2.4.5
-  sensors_plus: ^6.1.1
 
 dev_dependencies:
   flutter_test:

@@ -6,7 +6,7 @@ import './features/steering_joystick.dart';
 import './features/gas_joystick.dart';
 import 'package:speedpilot/settings_page/settings_page.dart';
 import '../driving_page/features/lidar_data.dart';
-import '../settings_page/settings_page.dart';
+import '../driving_page/features/lidar_data.dart';
 
 
 class NoMapDrivingPage extends StatelessWidget {
@@ -59,22 +59,9 @@ class NoMapDrivingPage extends StatelessWidget {
                   DeviceOrientation.portraitUp,
                   DeviceOrientation.portraitDown
                 ]);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MapScrolling()),
-                );
-              },
-            ),
-          ),
-          Positioned(
-            top: 20,
-            right: 50,
-            child: IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
-              onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Settings()),
+                  MaterialPageRoute(builder: (context) => MapScrolling()),
                 );
               },
             ),

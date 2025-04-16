@@ -21,70 +21,24 @@ class _OptionsState extends State<Options> {
   ];
   List<bool> hasBeenPressed = [false];
   List<bool> isConnected = [false];
-  List<bool> isAborted = [false];
   Timer? connectionTimer;
 
-  void showErrorDialog(BuildContext context, String message, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color.fromARGB(200, 35, 35, 35),
-          title: Text(
-            'Fehler',
-            style: TextStyle(color: Colors.white),
-          ),
-          content: Text(
-            message,
-            style: TextStyle(color: Colors.white70),
-          ),
-          actions: [
-            TextButton(
-              child: Text('OK', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                Navigator.of(context).pop();
-                setState(() {
-                  isAborted[index] = true;
-                  isConnected[index] = false;
-                  hasBeenPressed[index] = false;
-                });
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> attemptConnection(String url, int index) async {
+  Future<void> attemptConnection() async {
     bool connected = false;
-
-    Timer timeoutTimer = Timer(Duration(seconds: 20), () {
-      if (!connected) {
-        showErrorDialog(
-          context,
-          "Es ist ein Fehler bei der Verbindung aufgetreten. Bitte überprüfen Sie die URL und ob der WebSocket läuft.",
-          index,
-        );
-        connectionTimer?.cancel();
-      }
-    });
-
     connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
       if (!connected) {
         try {
-          await WebSocketManager().connect(url);
+          await WebSocketManager().connect('ws://localhost:9090');
           setState(() {
-            isConnected[index] = true;
-            isAborted[index] = false;
+            isConnected = [true];
           });
           connected = true;
           print("WebSocket erfolgreich verbunden");
           timer.cancel();
-          timeoutTimer.cancel();
 
+          // Nach erfolgreicher Verbindung, die Seite wechseln
           if (connected) {
-            await Future.delayed(Duration(seconds: 2));
+            await Future.delayed((Duration(seconds: 2)));
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => MapScrolling()),
@@ -116,63 +70,14 @@ class _OptionsState extends State<Options> {
             margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             child: InkWell(
               onTap: () async {
-                String defaultUrl = 'ws://localhost:9090';
-                final controller = TextEditingController(text: defaultUrl);
+                // Versuche die Verbindung aufzubauen
+                await attemptConnection();
 
-                String? url = await showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      backgroundColor: const Color.fromARGB(200, 35, 35, 35),
-                      title: Text(
-                        "WebSocket URL eingeben",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      content: TextField(
-                        controller: controller,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: "WebSocket URL",
-                          labelStyle: TextStyle(color: Colors.white70),
-                          hintText: "z.B. ws://localhost:9090",
-                          hintStyle: TextStyle(color: Colors.white54),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white30),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text("Abbrechen", style: TextStyle(color: Colors.white70)),
-                          onPressed: () {
-                            Navigator.of(context).pop(null);
-                          },
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Text("Verbinden"),
-                          onPressed: () {
-                            Navigator.of(context).pop(controller.text);
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-
-                if (url != null && url.isNotEmpty) {
-                  await attemptConnection(url, index);
-
-                  setState(() {
+                setState(() {
+                  if (!hasBeenPressed[index]) {
                     hasBeenPressed[index] = true;
-                  });
-                }
+                  }
+                });
               },
               customBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -190,21 +95,15 @@ class _OptionsState extends State<Options> {
                           decoration: BoxDecoration(
                             color: isConnected[index]
                                 ? Colors.green
-                                : isAborted[index]
-                                    ? Colors.red
-                                    : hasBeenPressed[index]
-                                        ? Colors.orange
-                                        : Colors.red,
+                                : (hasBeenPressed[index] ? Colors.orange : Colors.red),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
                                 color: isConnected[index]
                                     ? Colors.green.withOpacity(0.8)
-                                    : isAborted[index]
-                                        ? Colors.red.withOpacity(0.8)
-                                        : hasBeenPressed[index]
-                                            ? Colors.orange.withOpacity(0.8)
-                                            : Colors.red.withOpacity(0.8),
+                                    : (hasBeenPressed[index]
+                                        ? Colors.orange.withOpacity(0.8)
+                                        : Colors.red.withOpacity(0.8)),
                                 spreadRadius: 10,
                                 blurRadius: 20,
                                 offset: Offset(0, 0),

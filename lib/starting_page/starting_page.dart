@@ -20,6 +20,18 @@ class StartingPage extends StatelessWidget {
           ),
            Positioned(
             top: 60,
+            right: 10,
+            child: IconButton(
+              icon: Icon(Icons.settings,color:Colors.white),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Settings()),
+                );
+              },
+      )),
+      Positioned(
+            top: 60,
             left: 10,
             child: IconButton(
               icon: Icon(Icons.logout,color:Colors.white),

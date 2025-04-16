@@ -45,7 +45,5 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSMotionUsageDescription</key>
-	<string>Diese App benötigt Zugriff auf Gyroskop-Daten.</string>
 </dict>
 </plist>

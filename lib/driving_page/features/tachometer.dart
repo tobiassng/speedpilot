@@ -10,7 +10,14 @@ class Tachometer extends StatefulWidget {
 
 class _TachometerState extends State<Tachometer> {
   double _currentValue = 0.0;
- 
+  void initState() {
+      super.initState();
+      WebSocketManager().listenSpeed((speed){
+        setState(() {
+          _currentValue = speed;
+        });
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
