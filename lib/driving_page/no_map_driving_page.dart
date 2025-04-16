@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:speedpilot/map_page/map_scrolling_page.dart';
+import './features/tachometer.dart';
+import 'package:flutter/services.dart';
+import './features/steering_joystick.dart';
+import './features/gas_joystick.dart';
+import 'package:speedpilot/settings_page/settings_page.dart';
+import '../driving_page/features/lidar_data.dart';
+import '../driving_page/features/lidar_data.dart';
+
+/// The NoMapDrivingPage class concludes the components GasJoystick, SteeringJoystick and Tachomter
+/// In this File those components are Aligned and correctly positioned
+
+class NoMapDrivingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
+    
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(200, 25, 25, 25),
+      body: Stack(
+        children: <Widget>[
+          // Tachometer bleibt unten und zentriert
+          Align(
+            alignment: Alignment.bottomCenter,
+              child: Tachometer(),
+          
+          ),
+          // Align(
+          // alignment: Alignment.topCenter,
+          //  child: Container(
+          //   margin: const EdgeInsets.only(
+          //      top: 10,
+          //    ),
+          //    height: 225,
+          //    width: 225,
+          //    child: LidarScreen())),
+          Positioned(
+            bottom: 7,
+            right: 40,      
+              child: SteeringJoystickPage()),
+        
+          Positioned(
+            bottom: 10,
+            left: 40,
+              child: GasJoystickPage()
+          ),
+          Positioned(
+            top: 20,
+            left: 50,
+            child: IconButton(
+              icon: Icon(Icons.navigate_before, color: Colors.white),
+              // If this button is pressed, a navigation to the Screen showing all available Maps, will be performed
+              // This Screen is implemented in the map_page/map_scrolling_page.dart file
+              onPressed: () {
+                SystemChrome.setPreferredOrientations([
+                  DeviceOrientation.portraitUp,
+                  DeviceOrientation.portraitDown
+                ]);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapScrolling()),
+                );
+              },
+            ),
+          ),
+         
+          
+        
+        ],
+      ),
+    );
+  }
+}
