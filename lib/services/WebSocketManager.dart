@@ -1,53 +1,57 @@
-import 'dart:io';
+import 'dart:async';
 import 'dart:convert';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebSocketManager {
   static final WebSocketManager _instance = WebSocketManager._internal();
-  late WebSocket _webSocket;
 
   factory WebSocketManager() {
     return _instance;
   }
 
   WebSocketManager._internal();
+  WebSocketChannel? _channel;
+  StreamSubscription? _subscription;
 
   Future<void> connect(String url) async {
-    _webSocket = await WebSocket.connect(url);
+    final uri = Uri.parse(url);
+    _channel = WebSocketChannel.connect(uri);
     print("WebSocket verbunden");
   }
 
-  WebSocket get connection => _webSocket;
-
   void sendMessage(String message) {
-    _webSocket.add(message);
+    _channel?.sink.add(message);
     print("Nachricht gesendet: $message");
   }
-  
-  void listenSpeed(void Function(double) onSpeedReceived) {
-    _webSocket.listen((data) {
-      final speed = double.tryParse(data.toString());
-      if (speed != null) {
-        onSpeedReceived(speed); 
-        print("Nachricht empfangen: $speed");
-      } else {
-        print("Ungültige Nachricht empfangen: $data");
-      }
-    });
+
+  void sendDrivingData(String command, double speed, double angle) {
+    final Map<String, dynamic> jsonData = {
+      "command": command,
+      "speed": speed,
+      "angle": angle
+    };
+    final String jsonString = jsonEncode(jsonData);
+    sendMessage(jsonString);
+  }
+
+  void receiveMessage(void Function(dynamic message) onMessage) {
+    _subscription = _channel?.stream.listen(
+      (message) {
+        onMessage(message);
+      },
+      onError: (error) {
+        print("Fehler beim Empfangen: $error");
+      },
+      onDone: () {
+        print("WebSocket-Verbindung beendet");
+      },
+      cancelOnError: true,
+    );
   }
 
   void closeConnection() {
-    _webSocket.close();
+    _subscription?.cancel();
+    _channel?.sink.close();
     print("WebSocket-Verbindung geschlossen");
-  }
-
-  void sendDrivingData(String c, double x, double y ) {
-    final Map<String, dynamic> jsonData = {
-      "command": c,
-      "speed": x,
-      "angle": y
-    };
-    final String convertedJsonData = jsonEncode(jsonData);
-    sendMessage(convertedJsonData);
-    print("sent message: $convertedJsonData");
   }
 }
