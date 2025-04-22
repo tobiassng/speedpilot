@@ -38,6 +38,18 @@ class NoMapDrivingPage extends StatelessWidget {
           //    width: 225,
           //    child: LidarScreen())),
           Positioned(
+          top: 20,
+          right: 50,
+          child: IconButton(
+            icon: Icon(Icons.settings,color:Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Settings()),
+              );
+                },
+          )),
+          Positioned(
             bottom: 7,
             right: 40,
             

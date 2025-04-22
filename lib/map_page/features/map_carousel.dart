@@ -14,8 +14,8 @@ class _CustomCarouselState extends State<CustomCarousel> {
 
   final List<Map<String, String>> images = [
     {'image': 'assets/images/nomap.png', 'caption': 'Without Map'},
-    {'image': 'assets/images/H222.png', 'caption': 'H222'},
-    {'image': 'assets/images/Pfuschmobil.jpg', 'caption': 'Bild 3'},
+    {'image': 'assets/images/lidar.jpg', 'caption': 'H222'},
+    {'image': 'assets/images/PfuschMobil.png', 'caption': 'Bild 3'},
   ];
 
   @override

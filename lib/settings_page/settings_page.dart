@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart'; 
-import "package:speedpilot/starting_page/starting_page.dart";
+import 'package:flutter/material.dart';
+import 'package:speedpilot/driving_page/no_map_driving_page.dart'; 
 import './features/settings_list.dart';
 
 class Settings extends StatelessWidget {
@@ -11,16 +11,18 @@ class Settings extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topCenter,
-            child: SettingsList(),    
+            child: Container(
+              margin: EdgeInsets.only(top: 50),
+              child: SettingsList()),    
           ),
           Positioned(
-            top: 60,
-            left: 10,
+            top: 20,
+            left: 50,
             child: IconButton(
               icon: Icon(Icons.navigate_before,color:Colors.white),
               onPressed: () {
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => StartingPage()));
+                MaterialPageRoute(builder: (context) => NoMapDrivingPage()));
               },
       ))]
         ),

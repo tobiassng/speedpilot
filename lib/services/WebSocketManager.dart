@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebSocketManager {
+  
   static final WebSocketManager _instance = WebSocketManager._internal();
 
   factory WebSocketManager() {
@@ -10,7 +11,9 @@ class WebSocketManager {
   }
 
   WebSocketManager._internal();
+
   WebSocketChannel? _channel;
+
   StreamSubscription? _subscription;
 
   Future<void> connect(String url) async {

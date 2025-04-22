@@ -27,9 +27,11 @@ class Options extends StatefulWidget {
 }
 
 class _OptionsState extends State<Options> {
+
   final List<String> options = [
-    "SpeedPilot", // Beispiel-Option
+    "SpeedPilot", 
   ];
+
   List<bool> hasBeenPressed = [false];
   List<bool> isConnected = [false];
   List<bool> isAborted = [false];
@@ -65,54 +67,58 @@ class _OptionsState extends State<Options> {
       },
     );
   }
+
   Future<void> attemptConnection() async {
-    bool connected = false;
-    Timer timeout = Timer(Duration(seconds: 20), (){
-      if (!connected) {
-        showErrorDialog(context, "Es ist ein Fehler aufgetreten, bitte überprüfen Sie ob das Auto hochgefahren ist",0);
-      }
-    });
-    connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
-      if (!connected) {
-        try {
-          await WebSocketManager().connect('ws://localhost:9090');
-          setState(() {
-            isConnected = [true];
-          });
-          connected = true;
-          timer.cancel();
-          timeout.cancel();
-          WebSocketManager().receiveMessage((message) {
-            final data = jsonDecode(message);
-            if (data["type"] == "command") {
-              print("Kommando vom Server: ${data["speed"]}, ${data["status"]} ,${data["content"]}");
-            }
-            else{
-              print("fehler"); 
-            }
-              
-          });
-          if (connected) {
-            await Future.delayed((Duration(seconds: 2)));
+  bool connected = false;
+  Timer timeout = Timer(Duration(seconds: 20), () {
+    if (!connected) {
+      showErrorDialog(context, "Es ist ein Fehler aufgetreten, bitte überprüfen Sie, ob das Auto hochgefahren ist", 0);
+    }
+  });
+
+  connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
+    if (!connected) {
+      try {
+        await WebSocketManager().connect('ws://localhost:9090');
+
+        WebSocketManager().receiveMessage((message) async {
+          final data = jsonDecode(message);
+          if (data["type"] == "command") {
+            print("Kommando vom Server: ${data["speed"]}, ${data["status"]}, ${data["content"]}");
+
+            setState(() {
+              isConnected[0] = true;
+            });
+            connected = true;
+
+            timer.cancel();
+            timeout.cancel();
+
+            await Future.delayed(Duration(seconds: 1)); 
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => MapScrolling()),
             );
+          } else {
+            print("Ungültige Nachricht vom Server");
           }
-        } catch (error) {
-          print("Fehler beim Verbinden: $error");
-        }
+        });
+
+      } catch (error) {
+        print("Fehler beim Verbinden: $error");
       }
-    });
-  }
+    }
+  });
+}
 
   @override
+
   void dispose() {
     connectionTimer?.cancel();
     super.dispose();
   }
-
   @override
+
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: options.length,
