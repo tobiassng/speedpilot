@@ -9,7 +9,7 @@ import '../driving_page/features/lidar_data.dart';
 import '../driving_page/features/lidar_data.dart';
 
 
-class NoMapDrivingPage extends StatelessWidget {
+class JoystickPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +42,12 @@ class NoMapDrivingPage extends StatelessWidget {
           right: 50,
           child: IconButton(
             icon: Icon(Icons.settings,color:Colors.white),
-            onPressed: () {
+            onPressed: () async {
+              WidgetsFlutterBinding.ensureInitialized();
+              SystemChrome.setPreferredOrientations([
+                DeviceOrientation.landscapeLeft,
+                DeviceOrientation.landscapeRight
+              ]);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Settings()),
@@ -53,7 +58,7 @@ class NoMapDrivingPage extends StatelessWidget {
             bottom: 7,
             right: 40,
             
-              child: JoystickPage()),
+              child: SteeringJoystickPage()),
           // FloatingActionButton oben links
         
           Positioned(

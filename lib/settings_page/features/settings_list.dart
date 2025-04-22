@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsList extends StatefulWidget {
+  final Function(bool) onSwitchChanged;
+  const SettingsList({
+    Key? key, required this.onSwitchChanged
+  }) : super(key: key);
+  
   @override
+  
   _SettingsList createState() => _SettingsList();
 }
 
 class _SettingsList extends State<SettingsList> {
+  bool _enable = false;
+  @override
+  void initState() {
+    super.initState();
+    _loadSwitchValue();
+  }
+  Future<void> _loadSwitchValue() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedValue = prefs.getBool('gyro') ?? false;
+    setState(() {
+      _enable = storedValue;
+    });
+  }
+  Future<void> _saveSwitchValue(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('gyro', value);
+  }
   final List<CardOption> settings = [
     CardOption(
       title: "Gyroscope",
@@ -44,8 +68,8 @@ class _SettingsList extends State<SettingsList> {
       fontColor: Colors.white,
     ),
   ];
-  bool _enable = false;
   @override
+
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: settings.length,
@@ -79,6 +103,8 @@ class _SettingsList extends State<SettingsList> {
                       setState(() {
                         _enable = val;
                       });
+                      _saveSwitchValue(val);
+                      widget.onSwitchChanged(val);
                     }),
                   if (index ==1)
                         Text(
@@ -117,7 +143,7 @@ class CustomSwitch extends StatefulWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  CustomSwitch({Key? key, required this.value, required this.onChanged})
+  const CustomSwitch({Key? key, required this.value, required this.onChanged})
       : super(key: key);
 
   @override
@@ -125,58 +151,82 @@ class CustomSwitch extends StatefulWidget {
 }
 
 class _CustomSwitchState extends State<CustomSwitch>
-    with SingleTickerProviderStateMixin {
-  Animation? _circleAnimation;
-  AnimationController? _animationController;
+  with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<Alignment> _circleAnimation;
 
   @override
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 60));
+        AnimationController(duration: Duration(milliseconds: 60), vsync: this);
+
     _circleAnimation = AlignmentTween(
-            begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
-            end: widget.value ? Alignment.centerLeft : Alignment.centerRight)
-        .animate(CurvedAnimation(
-            parent: _animationController!, curve: Curves.linear));
+      begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+      end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.linear,
+    ));
+
+    if (widget.value) {
+      _animationController.value = 1.0;
+    }
+    else {
+      _animationController.value = 0.0;
+    }
+  }
+
+  @override
+  void didUpdateWidget(CustomSwitch oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _circleAnimation = AlignmentTween(
+        begin: widget.value ? Alignment.centerLeft : Alignment.centerRight,
+        end: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+      ).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.linear,
+      ));
+
+      if (widget.value) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animationController!,
+      animation: _animationController,
       builder: (context, child) {
         return GestureDetector(
           onTap: () {
-            if (_animationController!.isCompleted) {
-              _animationController!.reverse();
-            } else {
-              _animationController!.forward();
-            }
-            widget.value == false
-                ? widget.onChanged(true)
-                : widget.onChanged(false);
+            final newValue = !widget.value;
+            widget.onChanged(newValue);
           },
           child: Container(
             width: 45.0,
             height: 28.0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24.0),
-              color: _circleAnimation!.value == Alignment.centerLeft
-                  ? Colors.green
-                  : Colors.grey
+              color: widget.value ? Colors.green : Colors.grey,
             ),
             child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 2.0, bottom: 2.0, right: 2.0, left: 2.0),
-              child: Container(
-                alignment:
-                    widget.value ? ((Directionality.of(context) == TextDirection.rtl) ? Alignment.centerRight : Alignment.centerLeft ) : ((Directionality.of(context) == TextDirection.rtl) ? Alignment.centerLeft : Alignment.centerRight),
+              padding: const EdgeInsets.all(2.0),
+              child: Align(
+                alignment: widget.value
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
                 child: Container(
                   width: 20.0,
                   height: 20.0,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.white),
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

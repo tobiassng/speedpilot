@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:speedpilot/driving_page/map_driving_page.dart'; 
-import 'package:speedpilot/driving_page/no_map_driving_page.dart';
+import 'package:speedpilot/driving_page/gyroscope_page.dart'; 
+import 'package:speedpilot/driving_page/joystick_page.dart';
 
 class CustomCarousel extends StatefulWidget {
   @override
@@ -53,7 +53,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MapDrivingPage(
+                          builder: (context) => GyroscopePage(
                               imagePath: images[index]['image']!)),
                     );
                   }
@@ -61,7 +61,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => NoMapDrivingPage()));
+                            builder: (context) => JoystickPage()));
                   }
                 },
                 child: buildImage(index),
