@@ -79,7 +79,7 @@ class _OptionsState extends State<Options> {
   connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
     if (!connected) {
       try {
-        await WebSocketManager().connect('ws://localhost:9090');
+        await WebSocketManager().connect('ws://172.20.10.3:9090');
 
         WebSocketManager().receiveMessage((message) async {
           final data = jsonDecode(message);
