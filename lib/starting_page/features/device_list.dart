@@ -79,26 +79,22 @@ class _OptionsState extends State<Options> {
   connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
     if (!connected) {
       try {
-        await WebSocketManager().connect('ws://172.20.10.3:9090');
-
-        WebSocketManager().receiveMessage((message) async {
-          final data = jsonDecode(message);
-          if (data["type"] == "command") {
-            print("Kommando vom Server: ${data["speed"]}, ${data["status"]}, ${data["content"]}");
-
-            setState(() {
-              isConnected[0] = true;
-            });
-            connected = true;
-
-            timer.cancel();
-            timeout.cancel();
-
-            await Future.delayed(Duration(seconds: 1)); 
+        await WebSocketManager().connect('ws://localhost:9090');
+        setState(() {
+            isConnected[0] = true;
+          });
+          connected = true;
+        timer.cancel();
+        timeout.cancel();
+        await Future.delayed(Duration(seconds: 1)); 
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => MapScrolling()),
             );
+        WebSocketManager().receiveMessage((message) async {
+          final data = jsonDecode(message);
+          if (data["type"] == "command") {
+            print("Kommando vom Server: ${data["speed"]}, ${data["status"]}, ${data["content"]}");
           } else {
             print("Ungültige Nachricht vom Server");
           }
