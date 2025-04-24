@@ -27,7 +27,7 @@ class _JoystickPageState extends State<SteeringJoystickPage> {
               color: Colors.red,
             ),
           ), listener: (StickDragDetails details) { 
-            WebSocketManager().sendDrivingData('move', details.x, details.y);
+            WebSocketManager().sendDrivingData('move', details.y, details.x);
             
             },
         ),

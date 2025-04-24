@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart'; 
+import 'package:motion_sensors/motion_sensors.dart';
+import 'package:speedpilot/services/WebSocketManager.dart';
 
 class getGyroscope extends StatefulWidget {
   @override
@@ -7,50 +11,45 @@ class getGyroscope extends StatefulWidget {
 }
 
 class _getGyroscope extends State<getGyroscope> {
-  double _gyroX = 0.0;
-  double _gyroY = 0.0;
-  double _gyroZ = 0.0;
+  double _motionPitch = 0.0;
+  double _motionRoll = 0.0;
+  double _motionYaw = 0.0;
+  late final StreamSubscription<OrientationEvent> _orientationSubscription;
   @override
    void initState() {
     super.initState();
 
-    // Listen to gyroscope data stream
-    gyroscopeEvents.listen((GyroscopeEvent event) {
+    // Listen to Motion data stream
+     _orientationSubscription = motionSensors.orientation.listen((OrientationEvent event) {
       setState(() {
-        _gyroX = event.x;
-        _gyroY = event.y;
-        _gyroZ = event.z;
+        _motionPitch = event.pitch;
+        _motionRoll = event.roll;
+        _motionYaw = event.yaw;
       });
-      normalizeGyroscopeData();
+      limitMotion();
+      WebSocketManager().sendDrivingData("move", _motionRoll, _motionPitch);
+
     });
   }
-  void normalizeGyroscopeData() {
-    double _gyroXnormalized;
-    double _gyroYnormalized;
-   if (_gyroX < 0.2 || _gyroX > -0.2) {
-    _gyroXnormalized = _gyroX * 10; 
-    print(_gyroXnormalized);
-   }
-   else if (_gyroX > 0.2) {
-    _gyroXnormalized = 1.0;
-    print(_gyroXnormalized);
-   }
-   else if (_gyroX < -0.2) {
-    _gyroXnormalized = -1.0;
-    print(_gyroXnormalized);
-   }
-   if (_gyroY < 0.2 || _gyroY > -0.2) {
-    _gyroYnormalized = _gyroY * 10; 
-    print(_gyroYnormalized);
-   }
-   else if (_gyroY > 0.2) {
-    _gyroYnormalized = 1.0;
-    print(_gyroYnormalized);
-   }
-   else if (_gyroY < -0.2) {
-    _gyroYnormalized = -1.0;
-    print(_gyroYnormalized);
-   }
+  
+  void limitMotion() {
+    if (_motionPitch >= 1.0){
+      _motionPitch = 1.0;
+    } 
+    else if (_motionPitch <= -1.0){
+      _motionPitch = -1.0;
+    }
+    if (_motionRoll >= 1.0){
+      _motionRoll = 1.0;
+    }
+    else if (_motionRoll <= -1.0){
+      _motionRoll = -1.0;
+    }
+  } 
+  @override
+  void dispose() {
+  _orientationSubscription.cancel();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -61,23 +60,24 @@ class _getGyroscope extends State<getGyroscope> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Gyroscope Data:',
+            Text('Motion Data:',
              style: TextStyle(
               color: Colors.white,
-             )), // Display a label
-            Text('X: $_gyroX',
+             )), 
+            Text('Pitch: $_motionPitch',
             style: TextStyle(
               color: Colors.white
-             )), // Display gyroscope X data
-            Text('Y: $_gyroY',
+             )), 
+            Text('Roll: $_motionRoll',
             style: TextStyle(
               color: Colors.white
-             )), // Display gyroscope Y data
-            Text('Z: $_gyroZ',
+             )), 
+            Text('Yaw: $_motionYaw',
             style: TextStyle(
               color: Colors.white
-             )), // Display gyroscope Z data
+             )), 
           ],
         ));
+  
   }
 }
