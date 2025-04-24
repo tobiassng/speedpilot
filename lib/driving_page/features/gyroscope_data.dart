@@ -21,10 +21,36 @@ class _getGyroscope extends State<getGyroscope> {
         _gyroY = event.y;
         _gyroZ = event.z;
       });
+      normalizeGyroscopeData();
     });
   }
   void normalizeGyroscopeData() {
-   
+    double _gyroXnormalized;
+    double _gyroYnormalized;
+   if (_gyroX < 0.2 || _gyroX > -0.2) {
+    _gyroXnormalized = _gyroX * 10; 
+    print(_gyroXnormalized);
+   }
+   else if (_gyroX > 0.2) {
+    _gyroXnormalized = 1.0;
+    print(_gyroXnormalized);
+   }
+   else if (_gyroX < -0.2) {
+    _gyroXnormalized = -1.0;
+    print(_gyroXnormalized);
+   }
+   if (_gyroY < 0.2 || _gyroY > -0.2) {
+    _gyroYnormalized = _gyroY * 10; 
+    print(_gyroYnormalized);
+   }
+   else if (_gyroY > 0.2) {
+    _gyroYnormalized = 1.0;
+    print(_gyroYnormalized);
+   }
+   else if (_gyroY < -0.2) {
+    _gyroYnormalized = -1.0;
+    print(_gyroYnormalized);
+   }
   }
   @override
   Widget build(BuildContext context) {
