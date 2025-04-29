@@ -64,7 +64,7 @@ On the iPhone:
 ### 3. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/tobiassng/speedpilot.git
 cd speedpilot
 flutter pub get
 ```
