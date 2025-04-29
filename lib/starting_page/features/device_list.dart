@@ -59,7 +59,9 @@ class _OptionsState extends State<Options> {
                 setState(() {
                   isAborted[index] = true;
                   isConnected[index] = false;
+                  hasBeenPressed[index] = false;
                 });
+                WebSocketManager().closeConnection(); 
               },
             ),
           ],
@@ -70,26 +72,32 @@ class _OptionsState extends State<Options> {
 
   Future<void> attemptConnection() async {
   bool connected = false;
+
   Timer timeout = Timer(Duration(seconds: 20), () {
     if (!connected) {
       showErrorDialog(context, "Es ist ein Fehler aufgetreten, bitte überprüfen Sie, ob das Auto hochgefahren ist", 0);
     }
   });
+
   connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
     if (!connected) {
       try {
         await WebSocketManager().connect('ws://172.20.10.3:9090');
-        setState(() {
-            isConnected[0] = true;
-          });
-          connected = true;
+        
+        connected = true;
         timer.cancel();
         timeout.cancel();
+        setState(() {
+          isConnected[0] = true;
+        });
+
         await Future.delayed(Duration(seconds: 1)); 
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MapScrolling()),
-            );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MapScrolling()),
+        );
+
+        // Und erst jetzt Nachrichten empfangen
         WebSocketManager().receiveMessage((message) async {
           final data = jsonDecode(message);
           if (data["type"] == "command") {
@@ -105,6 +113,7 @@ class _OptionsState extends State<Options> {
     }
   });
 }
+
 
   @override
 

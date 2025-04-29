@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebSocketManager {
@@ -19,7 +20,6 @@ class WebSocketManager {
   Future<void> connect(String url) async {
     final uri = Uri.parse(url);
     _channel = WebSocketChannel.connect(uri);
-    print("WebSocket verbunden");
   }
 
   void sendMessage(String message) {
