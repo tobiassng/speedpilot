@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:speedpilot/services/WebSocketManager.dart';
+import 'dart:convert';
+
+class GasJoystickPage extends StatefulWidget {
+  @override
+  _GasJoystickPageState createState() => _GasJoystickPageState();
+}
+class _GasJoystickPageState extends State<GasJoystickPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Joystick(
+          mode: JoystickMode.vertical,
+          base: JoystickBase(
+            mode: JoystickMode.vertical,
+            decoration: JoystickBaseDecoration(
+              drawOuterCircle: false,
+              color: Color.fromARGB(200, 25, 25, 25),
+              drawInnerCircle: false,
+              drawMiddleCircle: false
+            ),
+          ),
+          stick: JoystickStick(
+            decoration: JoystickStickDecoration(
+              color: Colors.red,
+            ),
+          ), listener: (StickDragDetails details) { 
+
+            WebSocketManager().sendDrivingData('move',details.y, details.x);
+          
+           },
+        ),
+      
+    );
+  }
+}
