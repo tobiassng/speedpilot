@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speedpilot/driving_page/gyroscope_page.dart'; 
 import 'package:speedpilot/driving_page/joystick_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomCarousel extends StatefulWidget {
   @override
@@ -11,14 +12,14 @@ class _CustomCarouselState extends State<CustomCarousel> {
   final PageController _pageController =
       PageController(viewportFraction: 0.7); 
   int _currentPage = 0;
-
+  
   final List<Map<String, String>> images = [
     {'image': 'assets/images/nomap.png', 'caption': 'Without Map'},
     {'image': 'assets/images/lidar.jpg', 'caption': 'H222'},
     {'image': 'assets/images/PfuschMobil.png', 'caption': 'Bild 3'},
   ];
-
   @override
+
   void initState() {
     super.initState();
     _pageController.addListener(() {
@@ -30,9 +31,13 @@ class _CustomCarouselState extends State<CustomCarousel> {
       }
     });
   }
-
+  Future<void> _setGyroToFalse() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('gyro', false);
+  }
   @override
   void dispose() {
+    
     _pageController.dispose();
     super.dispose();
   }

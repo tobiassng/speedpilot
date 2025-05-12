@@ -27,7 +27,7 @@ class Options extends StatefulWidget {
 }
 
 class _OptionsState extends State<Options> {
-
+  late TextEditingController controller;
   final List<String> options = [
     "SpeedPilot", 
   ];
@@ -69,7 +69,22 @@ class _OptionsState extends State<Options> {
       },
     );
   }
-
+  void showInputDialogue(BuildContext context) { 
+    showDialog(
+    context:context,
+    builder: (context) => AlertDialog(
+      title: Text("Type in Destination IP"),
+      content: TextField(
+        decoration: InputDecoration(hintText: "Enter here"),
+        controller: controller,
+        
+      ),
+      actions: [
+        TextButton(onPressed: attemptConnection, child: Text("Connect"), )
+      ],
+    )
+  );
+  }
   Future<void> attemptConnection() async {
   bool connected = false;
 
@@ -116,9 +131,13 @@ class _OptionsState extends State<Options> {
 
 
   @override
-
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+  }
   void dispose() {
     connectionTimer?.cancel();
+    controller.dispose();
     super.dispose();
   }
   @override
@@ -195,4 +214,5 @@ class _OptionsState extends State<Options> {
       },
     );
   }
+
 }

@@ -7,6 +7,7 @@ import './features/gas_joystick.dart';
 import 'package:speedpilot/settings_page/settings_page.dart';
 import '../driving_page/features/lidar_data.dart';
 import '../driving_page/features/lidar_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class JoystickPage extends StatelessWidget {
@@ -71,7 +72,9 @@ class JoystickPage extends StatelessWidget {
             left: 50,
             child: IconButton(
               icon: Icon(Icons.navigate_before, color: Colors.white),
-              onPressed: () {
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('gyro', false); // Standardmäßig auf false setzen
                 SystemChrome.setPreferredOrientations([
                   DeviceOrientation.portraitUp,
                   DeviceOrientation.portraitDown
