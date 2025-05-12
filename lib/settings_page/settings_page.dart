@@ -52,7 +52,7 @@ class _SettingsState extends State<Settings> {
         MaterialPageRoute(builder: (_) => JoystickPage()),
       );
     } else {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, 
           MaterialPageRoute(
               builder: (_) => GyroscopePage(imagePath: '',
