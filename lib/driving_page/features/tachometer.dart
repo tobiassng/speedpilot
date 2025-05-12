@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:speedpilot/services/WebSocketManager.dart';
+import './gas_joystick.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Tachometer extends StatefulWidget {
   @override
@@ -10,21 +11,38 @@ class Tachometer extends StatefulWidget {
 
 class _TachometerState extends State<Tachometer> {
   double _currentValue = 0.0;
-  //void initState() {
-   //   super.initState();
-   //   WebSocketManager().listenSpeed((speed){
-  //      setState(() {
-  //        _currentValue = speed;
-  //      });
-  //    });
-  //}
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startSpeedPolling();
+  }
+
+  void _startSpeedPolling() {
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      final prefs = await SharedPreferences.getInstance();
+      final newSpeed = prefs.getDouble('speed') ?? 0.0;
+
+      if (newSpeed != _currentValue && newSpeed >= 0.0) {
+        setState(() {
+          _currentValue = newSpeed;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
       width: MediaQuery.of(context).size.width * 0.4,
-
       child: SfRadialGauge(
         axes: <RadialAxis>[
           RadialAxis(
@@ -42,7 +60,7 @@ class _TachometerState extends State<Tachometer> {
                   stops: [0.0, 1.0],
                 ),
                 startWidth: 15,
-                endWidth: 15, 
+                endWidth: 15,
               ),
             ],
             pointers: <GaugePointer>[

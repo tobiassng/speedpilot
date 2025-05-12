@@ -4,6 +4,7 @@ import 'package:speedpilot/map_page/map_scrolling_page.dart';
 import 'package:speedpilot/settings_page/settings_page.dart';
 import './features/tachometer.dart';
 import './features/gyroscope_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GyroscopePage extends StatelessWidget {
   final String imagePath;
@@ -59,7 +60,9 @@ class GyroscopePage extends StatelessWidget {
             left: 50,
             child: IconButton(
               icon: Icon(Icons.navigate_before, color: Colors.white),
-              onPressed: () {
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('gyro', false); // Standardmäßig auf false setzen
                 SystemChrome.setPreferredOrientations([
                   DeviceOrientation.portraitUp,
                   DeviceOrientation.portraitDown
@@ -71,10 +74,10 @@ class GyroscopePage extends StatelessWidget {
               },
             ),
           ),
-         Align(alignment: Alignment.topCenter, child: Container(
-          height: 250,
-          width: 250,
-          child: getGyroscope())),
+         //Align(alignment: Alignment.topCenter, child: Container(
+          //height: 250,
+          //width: 250,
+          //child: getGyroscope())),
           
         
         ],
