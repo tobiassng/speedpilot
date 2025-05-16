@@ -33,7 +33,7 @@ class _GasJoystickPageState extends State<GasJoystickPage> {
             ),
           ), listener: (StickDragDetails details) { 
 
-            WebSocketManager().updateSpeed(details.y);
+            WebSocketManager().updateSpeed(-details.y);
             speedy = details.y * -1 * 8;
             _getSpeedData(speedy);
            },

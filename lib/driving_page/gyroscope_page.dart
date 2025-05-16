@@ -74,10 +74,10 @@ class GyroscopePage extends StatelessWidget {
               },
             ),
           ),
-         //Align(alignment: Alignment.topCenter, child: Container(
-          //height: 250,
-          //width: 250,
-          //child: getGyroscope())),
+         Align(alignment: Alignment.topCenter, child: Container(
+          height: 250,
+          width: 250,
+          child: getGyroscope())),
           
         
         ],

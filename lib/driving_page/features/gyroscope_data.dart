@@ -19,7 +19,6 @@ class _getGyroscope extends State<getGyroscope> {
   void initState() {
     super.initState();
 
-    // Start listening to gyroscope
     _orientationSubscription = motionSensors.orientation.listen((OrientationEvent event) {
       double pitch = event.pitch.clamp(-1.0, 1.0);
       double roll = event.roll.clamp(-1.0, 1.0);
@@ -31,8 +30,8 @@ class _getGyroscope extends State<getGyroscope> {
       });
 
       // Sende getrennt Speed & Angle
-      WebSocketManager().updateSpeed(pitch);  // Pitch = vor/zurück
-      WebSocketManager().updateAngle(roll);   // Roll = links/rechts
+      WebSocketManager().updateSpeed(roll);  // Pitch = vor/zurück
+      WebSocketManager().updateAngle(pitch);   // Roll = links/rechts
     });
   }
 

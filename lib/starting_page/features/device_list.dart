@@ -97,7 +97,7 @@ class _OptionsState extends State<Options> {
   connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
     if (!connected) {
       try {
-        await WebSocketManager().connect('ws://172.20.10.3:9090');
+        await WebSocketManager().connect('ws://10.42.0.1:9090');
         
         connected = true;
         timer.cancel();
