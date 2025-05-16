@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:speedpilot/services/WebSocketManager.dart';
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GasJoystickPage extends StatefulWidget {
@@ -34,7 +33,7 @@ class _GasJoystickPageState extends State<GasJoystickPage> {
             ),
           ), listener: (StickDragDetails details) { 
 
-            WebSocketManager().sendDrivingData('move',details.y, details.x);
+            WebSocketManager().updateSpeed(-details.y);
             speedy = details.y * -1 * 8;
             _getSpeedData(speedy);
            },

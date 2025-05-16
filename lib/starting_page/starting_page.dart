@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './features/device_list.dart';
+import 'features/device_list.dart';
 import 'package:flutter/services.dart';
 import 'package:speedpilot/settings_page/settings_page.dart';
 import 'package:speedpilot/services/WebSocketManager.dart';
