@@ -3,12 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsList extends StatefulWidget {
   final Function(bool) onSwitchChanged;
-  const SettingsList({
-    Key? key, required this.onSwitchChanged
-  }) : super(key: key);
-  
+  const SettingsList({Key? key, required this.onSwitchChanged})
+      : super(key: key);
+
   @override
-  
   _SettingsList createState() => _SettingsList();
 }
 
@@ -19,6 +17,7 @@ class _SettingsList extends State<SettingsList> {
     super.initState();
     _loadSwitchValue();
   }
+
   Future<void> _loadSwitchValue() async {
     final prefs = await SharedPreferences.getInstance();
     final storedValue = prefs.getBool('gyro') ?? false;
@@ -26,59 +25,60 @@ class _SettingsList extends State<SettingsList> {
       _enable = storedValue;
     });
   }
+
   Future<void> _saveSwitchValue(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('gyro', value);
   }
+
   final List<CardOption> settings = [
     CardOption(
       title: "Gyroscope",
-      color: const Color.fromARGB(200, 35, 35, 35),
-      fontColor: Colors.white,
-   
-    ),
-    CardOption(
-      title: "Steering",
-      color: const Color.fromARGB(200, 35, 35, 35),
+      color: const Color.fromARGB(250, 35, 35, 35),
       fontColor: Colors.white,
     ),
     CardOption(
       title: "Steering",
-      color: const Color.fromARGB(200, 35, 35, 35),
+      color: const Color.fromARGB(250, 35, 35, 35),
       fontColor: Colors.white,
     ),
     CardOption(
       title: "Steering",
-      color: const Color.fromARGB(200, 35, 35, 35),
+      color: const Color.fromARGB(250, 35, 35, 35),
       fontColor: Colors.white,
     ),
     CardOption(
       title: "Steering",
-      color: const Color.fromARGB(200, 35, 35, 35),
+      color: const Color.fromARGB(250, 35, 35, 35),
       fontColor: Colors.white,
     ),
     CardOption(
       title: "Steering",
-      color: const Color.fromARGB(200, 35, 35, 35),
+      color: const Color.fromARGB(250, 35, 35, 35),
       fontColor: Colors.white,
     ),
     CardOption(
       title: "Steering",
-      color: const Color.fromARGB(200, 35, 35, 35),
+      color: const Color.fromARGB(250, 35, 35, 35),
+      fontColor: Colors.white,
+    ),
+    CardOption(
+      title: "Steering",
+      color: const Color.fromARGB(250, 35, 35, 35),
       fontColor: Colors.white,
     ),
   ];
   @override
-
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: settings.length,
       itemBuilder: (context, index) {
         final setting = settings[index];
         return Container(
-          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1,
-          left:  MediaQuery.of(context).size.height * 0.2,
-          right:  MediaQuery.of(context).size.height * 0.2),
+          margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.1,
+              left: MediaQuery.of(context).size.height * 0.2,
+              right: MediaQuery.of(context).size.height * 0.2),
           height: MediaQuery.of(context).size.height * 0.15,
           child: Card(
             color: setting.color,
@@ -86,7 +86,8 @@ class _SettingsList extends State<SettingsList> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,// Texte links ausrichten
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween, // Texte links ausrichten
                 children: [
                   if (index == 0)
                     Text(
@@ -95,25 +96,25 @@ class _SettingsList extends State<SettingsList> {
                         color: setting.fontColor,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                      
                       ),
                     ),
                   if (index == 0)
-                    CustomSwitch(value:_enable, onChanged:(bool val){
-                      setState(() {
-                        _enable = val;
-                      });
-                      _saveSwitchValue(val);
-                      widget.onSwitchChanged(val);
-                    }),
-                  if (index ==1)
-                        Text(
+                    CustomSwitch(
+                        value: _enable,
+                        onChanged: (bool val) {
+                          setState(() {
+                            _enable = val;
+                          });
+                          _saveSwitchValue(val);
+                          widget.onSwitchChanged(val);
+                        }),
+                  if (index == 1)
+                    Text(
                       setting.title,
                       style: TextStyle(
                         color: setting.fontColor,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                      
                       ),
                     ),
                 ],
@@ -135,7 +136,6 @@ class CardOption {
     required this.title,
     required this.color,
     required this.fontColor,
-
   });
 }
 
@@ -151,7 +151,7 @@ class CustomSwitch extends StatefulWidget {
 }
 
 class _CustomSwitchState extends State<CustomSwitch>
-  with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Alignment> _circleAnimation;
 
@@ -171,8 +171,7 @@ class _CustomSwitchState extends State<CustomSwitch>
 
     if (widget.value) {
       _animationController.value = 1.0;
-    }
-    else {
+    } else {
       _animationController.value = 0.0;
     }
   }
@@ -217,9 +216,8 @@ class _CustomSwitchState extends State<CustomSwitch>
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Align(
-                alignment: widget.value
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
+                alignment:
+                    widget.value ? Alignment.centerRight : Alignment.centerLeft,
                 child: Container(
                   width: 20.0,
                   height: 20.0,

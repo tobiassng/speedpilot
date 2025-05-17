@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:speedpilot/driving_page/gyroscope_page.dart'; 
+import 'package:speedpilot/driving_page/gyroscope_page.dart';
 import 'package:speedpilot/driving_page/joystick_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,17 +9,15 @@ class CustomCarousel extends StatefulWidget {
 }
 
 class _CustomCarouselState extends State<CustomCarousel> {
-  final PageController _pageController =
-      PageController(viewportFraction: 0.7); 
+  final PageController _pageController = PageController(viewportFraction: 0.7);
   int _currentPage = 0;
-  
+
   final List<Map<String, String>> images = [
     {'image': 'assets/images/nomap.png', 'caption': 'Without Map'},
     {'image': 'assets/images/lidar.jpg', 'caption': 'H222'},
     {'image': 'assets/images/PfuschMobil.png', 'caption': 'Bild 3'},
   ];
   @override
-
   void initState() {
     super.initState();
     _pageController.addListener(() {
@@ -31,13 +29,14 @@ class _CustomCarouselState extends State<CustomCarousel> {
       }
     });
   }
+
   Future<void> _setGyroToFalse() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('gyro', false);
   }
+
   @override
   void dispose() {
-    
     _pageController.dispose();
     super.dispose();
   }
@@ -74,8 +73,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
             },
           ),
         ),
-        SizedBox(
-            height: 10), 
+        SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(images.length, (index) {
@@ -87,29 +85,25 @@ class _CustomCarouselState extends State<CustomCarousel> {
   }
 
   Widget buildImage(int index) {
-
-  
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       margin: EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.height * 0.22, 
-        horizontal: 10, 
+        vertical: MediaQuery.of(context).size.height * 0.22,
+        horizontal: 10,
       ),
       child: Column(
-
         children: [
           Card(
-            elevation: 8.0, 
+            elevation: 8.0,
             shadowColor: Colors.black.withOpacity(0.5),
-            color: const Color.fromARGB(200, 25, 25, 25),
+            color: const Color.fromARGB(200, 35, 35, 35),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15.0),
               child: SizedBox(
-            
-                height: MediaQuery.of(context).size.height * 0.3, 
+                height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Image.asset(
                   images[index]['image']!,
@@ -118,12 +112,12 @@ class _CustomCarouselState extends State<CustomCarousel> {
               ),
             ),
           ),
-          SizedBox(height: 10), 
+          SizedBox(height: 10),
           Text(
             images[index]['caption']!,
             style: TextStyle(
-              color: Colors.white, 
-              fontSize: 20, 
+              color: Colors.white,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -144,9 +138,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 50),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: _currentPage == index
-              ? Colors.white
-              : Colors.grey, 
+          color: _currentPage == index ? Colors.white : Colors.grey,
         ),
       ),
     );
