@@ -3,10 +3,13 @@ class OccupancyGrid {
   final MapMetaData mapMetaData;
   final List<int> data;
 
-  OccupancyGrid({required this.header, required this.mapMetaData, required this.data});
+  OccupancyGrid(
+      {required this.header, required this.mapMetaData, required this.data});
 
   factory OccupancyGrid.fromJson(Map<String, dynamic> json) {
-    List<int> dataIntList = (json["data"] as List<dynamic>).map<int>((item) => item as int).toList();
+    List<int> dataIntList = (json["data"] as List<dynamic>)
+        .map<int>((item) => item as int)
+        .toList();
 
     return OccupancyGrid(
       header: Header(
@@ -59,7 +62,11 @@ class MapMetaData {
   final int height;
   final Pose origin;
 
-  MapMetaData({required this.resolution, required this.width, required this.height, required this.origin});
+  MapMetaData(
+      {required this.resolution,
+      required this.width,
+      required this.height,
+      required this.origin});
 }
 
 class Pose {
@@ -78,5 +85,6 @@ class Position {
 class Orientation {
   final double x, y, z, w;
 
-  Orientation({required this.x, required this.y, required this.z, required this.w});
+  Orientation(
+      {required this.x, required this.y, required this.z, required this.w});
 }

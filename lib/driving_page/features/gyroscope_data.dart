@@ -19,7 +19,8 @@ class _getGyroscope extends State<getGyroscope> {
   void initState() {
     super.initState();
 
-    _orientationSubscription = motionSensors.orientation.listen((OrientationEvent event) {
+    _orientationSubscription =
+        motionSensors.orientation.listen((OrientationEvent event) {
       double pitch = event.pitch.clamp(-1.0, 1.0);
       double roll = event.roll.clamp(-1.0, 1.0);
 
@@ -30,8 +31,8 @@ class _getGyroscope extends State<getGyroscope> {
       });
 
       // Sende getrennt Speed & Angle
-      WebSocketManager().updateSpeed(roll);  // Pitch = vor/zurück
-      WebSocketManager().updateAngle(pitch);   // Roll = links/rechts
+      WebSocketManager().updateSpeed(roll); // Pitch = vor/zurück
+      WebSocketManager().updateAngle(pitch); // Roll = links/rechts
     });
   }
 
@@ -44,9 +45,8 @@ class _getGyroscope extends State<getGyroscope> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      width: 100,
-      color: const Color.fromARGB(200, 25, 25, 25),
+      height: 80,
+      color: const Color.fromARGB(250, 25, 25, 25),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
