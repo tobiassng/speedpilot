@@ -15,7 +15,7 @@ class MapScrolling extends StatelessWidget {
     ]);
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(250, 25, 25, 25),
+      backgroundColor: const Color.fromARGB(200, 25, 25, 25),
       body: Stack(
         children: <Widget>[
           CustomCarousel(),

@@ -9,21 +9,25 @@ import '../driving_page/features/lidar_data.dart';
 import '../driving_page/features/lidar_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class JoystickPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
+    
     return Scaffold(
-      backgroundColor: const Color.fromARGB(250, 25, 25, 25),
+      backgroundColor: const Color.fromARGB(200, 25, 25, 25),
       body: Stack(
         children: <Widget>[
           // Tachometer bleibt unten und zentriert
           Align(
             alignment: Alignment.bottomCenter,
-            child: Tachometer(),
+              child: Tachometer(),
+          
           ),
           // Align(
           // alignment: Alignment.topCenter,
@@ -35,26 +39,34 @@ class JoystickPage extends StatelessWidget {
           //    width: 225,
           //    child: LidarScreen())),
           Positioned(
-              top: 20,
-              right: 50,
-              child: IconButton(
-                icon: Icon(Icons.settings, color: Colors.white),
-                onPressed: () async {
-                  WidgetsFlutterBinding.ensureInitialized();
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.landscapeRight
-                  ]);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Settings()),
-                  );
+          top: 20,
+          right: 50,
+          child: IconButton(
+            icon: Icon(Icons.settings,color:Colors.white),
+            onPressed: () async {
+              WidgetsFlutterBinding.ensureInitialized();
+              SystemChrome.setPreferredOrientations([
+                DeviceOrientation.landscapeLeft,
+                DeviceOrientation.landscapeRight
+              ]);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Settings()),
+              );
                 },
-              )),
-          Positioned(bottom: 7, right: 40, child: SteeringJoystickPage()),
+          )),
+          Positioned(
+            bottom: 7,
+            right: 40,
+            
+              child: SteeringJoystickPage()),
           // FloatingActionButton oben links
-
-          Positioned(bottom: 10, left: 40, child: GasJoystickPage()),
+        
+          Positioned(
+            bottom: 10,
+            left: 40,
+              child: GasJoystickPage()
+          ),
           Positioned(
             top: 20,
             left: 50,
@@ -62,8 +74,7 @@ class JoystickPage extends StatelessWidget {
               icon: Icon(Icons.navigate_before, color: Colors.white),
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
-                await prefs.setBool(
-                    'gyro', false); // Standardmäßig auf false setzen
+                await prefs.setBool('gyro', false); // Standardmäßig auf false setzen
                 SystemChrome.setPreferredOrientations([
                   DeviceOrientation.portraitUp,
                   DeviceOrientation.portraitDown
@@ -75,6 +86,9 @@ class JoystickPage extends StatelessWidget {
               },
             ),
           ),
+         
+          
+        
         ],
       ),
     );

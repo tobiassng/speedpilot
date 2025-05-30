@@ -17,6 +17,8 @@ class WebSocketManager {
   double _currentSpeed = 0.0;
   double _currentAngle = 0.0;
 
+  void Function(Map<String, dynamic>)? onLidarDataReceived;
+
   Future<void> connect(String url) async {
     final uri = Uri.parse(url);
     _channel = WebSocketChannel.connect(uri);
@@ -50,6 +52,19 @@ class WebSocketManager {
   void receiveMessage(void Function(dynamic message) onMessage) {
     _subscription = _channel?.stream.listen(
       (message) {
+        try {
+          final decoded = jsonDecode(message);
+          // Wenn es Lidar-Daten gibt, rufe den Handler auf
+          if (decoded is Map<String, dynamic> && decoded.containsKey('lidar')) {
+            if (onLidarDataReceived != null) {
+              onLidarDataReceived!(decoded['lidar']);
+            }
+          }
+        } catch (e) {
+          print("Fehler beim Parsen der Nachricht: $e");
+        }
+
+        // Unabhängig von Lidar alles weiterleiten
         onMessage(message);
       },
       onError: (error) {

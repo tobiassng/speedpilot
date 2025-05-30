@@ -32,11 +32,11 @@ class _TachometerState extends State<Tachometer> {
     });
   }
 
-    @override
-    void dispose() {
-      _timer?.cancel();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

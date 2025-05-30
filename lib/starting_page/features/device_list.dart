@@ -40,7 +40,6 @@ class _DeviceOptions extends State<DeviceOptions> {
       });
     }
   }
-
   Future<void> saveDeviceCards() async {
     final prefs = await SharedPreferences.getInstance();
     final List<String> jsonList =
@@ -82,40 +81,74 @@ class _DeviceOptions extends State<DeviceOptions> {
   }
 
   Future<void> attemptConnection(int index) async {
-    bool connected = false;
+  bool connected = false;
 
-    Timer timeout = Timer(Duration(seconds: 20), () {
-      if (!connected) {
-        connectionTimer?.cancel();
-        showErrorDialog(
-            context,
-            "Überprüfen Sie, ob ihre URL dem Schema ws://x.x.x.x entspricht und ob das Auto vollständig hochgefahren ist. Versuchen Sie es anschließend erneut",
-            0);
-      }
-    });
+  // Timeout nach 20 Sekunden
+  Timer timeout = Timer(Duration(seconds: 20), () {
+    if (!connected) {
+      connectionTimer?.cancel();
+      showErrorDialog(
+        context,
+        "Überprüfen Sie, ob Ihre URL dem Schema ws://x.x.x.x entspricht und ob das Auto vollständig hochgefahren ist. Versuchen Sie es anschließend erneut.",
+        index,
+      );
+    }
+  });
 
-    connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
-      if (!connected) {
-        try {
-          String url = deviceCards[index].ipaddress;
-          await WebSocketManager().connect(url);
-          print(
-              "Verbindungsaufbau zu ${deviceCards[index].ipaddress} gestartet");
-          connected = true;
-          timer.cancel();
-          timeout.cancel();
-          setState(() {
-            isConnected[0] = true;
-          });
+  // Versuche alle 2 Sekunden Verbindung
+  connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
+    if (!connected) {
+      try {
+        String url = deviceCards[index].ipaddress;
+        await WebSocketManager().connect(url);
+        print("Verbindungsaufbau zu ${deviceCards[index].ipaddress} gestartet");
 
-          await Future.delayed(Duration(seconds: 1));
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MapScrolling()),
-          );
+        connected = true;
+        timer.cancel();
+        timeout.cancel();
 
-          // Und erst jetzt Nachrichten empfangen
-          WebSocketManager().receiveMessage((message) async {
+        setState(() {
+          isConnected[0] = true;
+        });
+
+        // ✅ Lidar-Listener aktivieren – nach erfolgreicher Verbindung
+        WebSocketManager().onLidarDataReceived = (lidarData) {
+          try {
+            final timestamp = lidarData['timestamp'];
+            final List<dynamic>? ranges = lidarData['ranges'];
+
+            if (ranges != null) {
+              final cleanedRanges = ranges.map((r) {
+                if (r == null ||
+                    r == double.infinity ||
+                    r.toString().toLowerCase() == "infinity") {
+                  return null; // oder ein Wert wie 10.0
+                }
+                return r;
+              }).toList();
+
+              print(
+                  "Lidar erhalten – Timestamp: ${timestamp?.toStringAsFixed(2)}, gültige Ranges: ${cleanedRanges.where((r) => r != null).length}");
+
+              // Hier: Weiterverarbeitung oder Übergabe an andere Seite
+            } else {
+              print("Lidar-Daten ohne gültiges 'ranges'-Feld empfangen.");
+            }
+          } catch (e) {
+            print("Fehler beim Verarbeiten der Lidar-Daten: $e");
+          }
+        };
+
+        // 🧭 Navigation zur Map-Seite
+        await Future.delayed(Duration(seconds: 1));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MapScrolling()),
+        );
+
+        // 🔄 Allgemeine Nachrichtenbehandlung (optional)
+        WebSocketManager().receiveMessage((message) async {
+          try {
             final data = jsonDecode(message);
             if (data["type"] == "command") {
               print(
@@ -123,13 +156,16 @@ class _DeviceOptions extends State<DeviceOptions> {
             } else {
               print("Ungültige Nachricht vom Server");
             }
-          });
-        } catch (error) {
-          print("Fehler beim Verbinden: $error");
-        }
+          } catch (e) {
+            print("Fehler beim Verarbeiten der Nachricht: $e");
+          }
+        });
+      } catch (error) {
+        print("Fehler beim Verbinden: $error");
       }
-    });
-  }
+    }
+  });
+}
 
   @override
   void initState() {
@@ -255,6 +291,6 @@ class _DeviceOptions extends State<DeviceOptions> {
           },
         ),
       ),
-    );
+    ) ;
   }
 }

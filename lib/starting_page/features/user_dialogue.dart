@@ -56,7 +56,7 @@ class _AddUserDialogueState extends State<AddUserDialogue> {
           ),
           onPressed: () {
             final device =
-                CardList(nameController.text, ipaddressController.text);
+                CardList(nameController.text, "ws://${ipaddressController.text}");
             widget.addDeviceCard(device);
             Navigator.pop(context);
           },

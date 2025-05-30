@@ -17,19 +17,20 @@ class _JoystickPageState extends State<SteeringJoystickPage> {
       base: JoystickBase(
         mode: JoystickMode.horizontal,
         decoration: JoystickBaseDecoration(
-            drawOuterCircle: false,
-            color: Color.fromARGB(250, 25, 25, 25),
-            drawInnerCircle: false,
-            drawMiddleCircle: false),
+          drawOuterCircle: false,
+          color: Color.fromARGB(200, 25, 25, 25),
+          drawInnerCircle: false,
+          drawMiddleCircle: false
+        ),
       ),
       stick: JoystickStick(
         decoration: JoystickStickDecoration(
           color: Colors.red,
         ),
-      ),
-      listener: (StickDragDetails details) {
+      ), listener: (StickDragDetails details) { 
         WebSocketManager().updateAngle(details.x);
-      },
+        
+        },
     );
   }
 }

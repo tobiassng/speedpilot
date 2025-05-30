@@ -19,18 +19,16 @@ class _LidarScreenState extends State<LidarScreen> {
   }
 
   Future<void> loadLidarData() async {
-    try {
-      String jsonStr = await rootBundle
-          .loadString('assets/lidar_data/occupancy_grid_example.json');
-      Map<String, dynamic> jsonMap = json.decode(jsonStr);
-      setState(() {
-        grid = OccupancyGrid.fromJson(jsonMap);
-      });
-    } catch (e, stacktrace) {
-      print("Fehler beim Laden der JSON-Datei: $e");
-      print(stacktrace);
-    }
-  }
+  try {
+    String jsonStr = await rootBundle.loadString('assets/lidar_data/occupancy_grid_example.json');
+    Map<String, dynamic> jsonMap = json.decode(jsonStr);
+    setState(() {
+      grid = OccupancyGrid.fromJson(jsonMap);
+    });
+  } catch (e, stacktrace) {
+    print("Fehler beim Laden der JSON-Datei: $e");
+    print(stacktrace);
+  }}
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +49,9 @@ class _LidarScreenState extends State<LidarScreen> {
           Color color;
 
           if (value == -1) {
-            color = const Color.fromARGB(255, 0, 0, 0);
+            color = const Color.fromARGB(255,0,0,0);
           } else if (value == 0) {
-            color = const Color.fromARGB(255, 0, 0, 0);
+            color = const Color.fromARGB(255,0,0,0);
           } else {
             color = Colors.white;
           }

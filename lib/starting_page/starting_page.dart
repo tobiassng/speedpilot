@@ -11,15 +11,24 @@ class StartingPage extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(250, 25, 25, 25),
-          leading: IconButton(
-            icon: Icon(Icons.logout, color: Colors.white),
-            onPressed: () {
-              WebSocketManager().closeConnection();
-            },
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Devices(),    
           ),
-        ),
-        body: Devices());
+          Positioned(
+                top: 60,
+                left: 10,
+                child: IconButton(
+                  icon: Icon(Icons.logout,color:Colors.white),
+                  onPressed: () {
+                    WebSocketManager().closeConnection();
+                  },
+          )),
+            ],
+          ),
+      backgroundColor: const Color.fromARGB(200, 25, 25, 25),
+    );
   }
 }

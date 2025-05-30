@@ -11,9 +11,7 @@ class AlternativePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child:
-              Text("Alternative Seite", style: TextStyle(color: Colors.white))),
+      body: Center(child: Text("Alternative Seite", style: TextStyle(color: Colors.white))),
       backgroundColor: Colors.black,
     );
   }
@@ -26,15 +24,17 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   bool _switchState = false;
-
+  
   get images => null;
 
   @override
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
     _loadInitialState();
   }
 
@@ -53,19 +53,18 @@ class _SettingsState extends State<Settings> {
       );
     } else {
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (_) => GyroscopePage(
-                  imagePath: '',
+          context, 
+          MaterialPageRoute(
+              builder: (_) => GyroscopePage(imagePath: '',
                 )),
-      );
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(250, 25, 25, 25),
+      backgroundColor: Color.fromARGB(200, 25, 25, 25),
       body: Stack(
         children: [
           Align(
