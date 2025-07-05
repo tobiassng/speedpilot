@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:speedpilot/services/WebSocketManager.dart';
 import 'package:speedpilot/map_page/map_scrolling_page.dart';
 
+// Wrapper widget for device selection page
 class Devices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,20 +15,23 @@ class Devices extends StatelessWidget {
   }
 }
 
+// Stateful widget for managing and displaying saved devices
 class DeviceOptions extends StatefulWidget {
   const DeviceOptions({Key? key}) : super(key: key);
   _DeviceOptions createState() => _DeviceOptions();
 }
 
 class _DeviceOptions extends State<DeviceOptions> {
-  List<CardList> deviceCards = [];
+  List<CardList> deviceCards = []; // List of saved devices
 
+  // Connection tracking states
   List<bool> hasBeenPressed = [false];
   List<bool> isConnected = [false];
   List<bool> isAborted = [false];
 
   Timer? connectionTimer;
 
+  // Load device cards from SharedPreferences
   Future<void> loadDeviceCards() async {
     final prefs = await SharedPreferences.getInstance();
     final List<String>? jsonList = prefs.getStringList('deviceCards');
@@ -41,6 +45,7 @@ class _DeviceOptions extends State<DeviceOptions> {
     }
   }
 
+  // Save device cards to SharedPreferences
   Future<void> saveDeviceCards() async {
     final prefs = await SharedPreferences.getInstance();
     final List<String> jsonList =
@@ -48,6 +53,7 @@ class _DeviceOptions extends State<DeviceOptions> {
     await prefs.setStringList('deviceCards', jsonList);
   }
 
+  // Show error dialog if connection fails
   void showErrorDialog(BuildContext context, String message, int index) {
     showDialog(
       context: context,
@@ -55,7 +61,7 @@ class _DeviceOptions extends State<DeviceOptions> {
         return AlertDialog(
           backgroundColor: const Color.fromARGB(200, 35, 35, 35),
           title: Text(
-            'Fehler',
+            'Error',
             style: TextStyle(color: Colors.white),
           ),
           content: Text(
@@ -81,26 +87,28 @@ class _DeviceOptions extends State<DeviceOptions> {
     );
   }
 
+  // Try to connect to the selected device via WebSocket
   Future<void> attemptConnection(int index) async {
     bool connected = false;
 
+    // Timeout after 20 seconds if not connected
     Timer timeout = Timer(Duration(seconds: 20), () {
       if (!connected) {
         connectionTimer?.cancel();
         showErrorDialog(
             context,
-            "Überprüfen Sie, ob ihre URL dem Schema ws://x.x.x.x entspricht und ob das Auto vollständig hochgefahren ist. Versuchen Sie es anschließend erneut",
+            "Check if your URL matches the format ws://x.x.x.x and if the car is fully booted. Then try again.",
             0);
       }
     });
 
+    // Attempt connection every 2 seconds
     connectionTimer = Timer.periodic(Duration(seconds: 2), (timer) async {
       if (!connected) {
         try {
           String url = deviceCards[index].ipaddress;
           await WebSocketManager().connect(url);
-          print(
-              "Verbindungsaufbau zu ${deviceCards[index].ipaddress} gestartet");
+          print("Connecting to ${deviceCards[index].ipaddress}");
           connected = true;
           timer.cancel();
           timeout.cancel();
@@ -109,23 +117,24 @@ class _DeviceOptions extends State<DeviceOptions> {
           });
 
           await Future.delayed(Duration(seconds: 1));
+
+          // Navigate to the map page on success
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => MapScrolling()),
           );
 
-          // Und erst jetzt Nachrichten empfangen
+          // Start listening for incoming messages
           WebSocketManager().receiveMessage((message) async {
             final data = jsonDecode(message);
             if (data["type"] == "command") {
-              print(
-                  "Kommando vom Server: ${data["speed"]}, ${data["status"]}, ${data["content"]}");
+              print("Server command: ${data["speed"]}, ${data["status"]}, ${data["content"]}");
             } else {
-              print("Ungültige Nachricht vom Server");
+              print("Invalid message from server");
             }
           });
         } catch (error) {
-          print("Fehler beim Verbinden: $error");
+          print("Connection error: $error");
         }
       }
     });
@@ -134,9 +143,10 @@ class _DeviceOptions extends State<DeviceOptions> {
   @override
   void initState() {
     super.initState();
-    loadDeviceCards();
+    loadDeviceCards(); // Load saved devices at startup
   }
 
+  // Add new device card and persist it
   void addDeviceData(CardList device) {
     setState(() {
       deviceCards.add(device);
@@ -144,13 +154,15 @@ class _DeviceOptions extends State<DeviceOptions> {
     saveDeviceCards();
   }
 
+  @override
   void dispose() {
-    connectionTimer?.cancel();
+    connectionTimer?.cancel(); // Clean up timer
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Show dialog to add new device
     void showUserDialogue() {
       showDialog(
         context: context,
@@ -192,10 +204,11 @@ class _DeviceOptions extends State<DeviceOptions> {
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   onTap: () async {
-                    await attemptConnection(index);
+                    await attemptConnection(index); // Attempt to connect on tap
                   },
                   child: Row(
                     children: [
+                      // Red status dot
                       Container(
                         margin: const EdgeInsets.only(left: 25),
                         width: 24.0,
@@ -213,6 +226,7 @@ class _DeviceOptions extends State<DeviceOptions> {
                           ],
                         ),
                       ),
+                      // Device name and IP address
                       Expanded(
                         child: ListTile(
                           title: Text(
@@ -232,18 +246,20 @@ class _DeviceOptions extends State<DeviceOptions> {
                           ),
                         ),
                       ),
+                      // Placeholder image
                       Container(
                         height: 100,
                         width: 100,
                         margin: const EdgeInsets.only(right: 0),
                         child: Image.asset('assets/images/PfuschMobil.png'),
                       ),
+                      // Delete button
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
                           setState(() {
                             deviceCards.removeAt(index);
-                            saveDeviceCards();
+                            saveDeviceCards(); // Save changes after deletion
                           });
                         },
                       ),

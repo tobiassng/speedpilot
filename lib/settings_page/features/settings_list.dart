@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// SettingsList widget with toggle switches (currently only Gyroscope is functional)
 class SettingsList extends StatefulWidget {
   final Function(bool) onSwitchChanged;
-  const SettingsList({Key? key, required this.onSwitchChanged})
-      : super(key: key);
+
+  const SettingsList({Key? key, required this.onSwitchChanged}) : super(key: key);
 
   @override
   _SettingsList createState() => _SettingsList();
 }
 
 class _SettingsList extends State<SettingsList> {
-  bool _enable = false;
+  bool _enable = false; // Stores current gyro switch state
+
   @override
   void initState() {
     super.initState();
-    _loadSwitchValue();
+    _loadSwitchValue(); // Load stored value when widget initializes
   }
 
+  // Load gyro setting from SharedPreferences
   Future<void> _loadSwitchValue() async {
     final prefs = await SharedPreferences.getInstance();
     final storedValue = prefs.getBool('gyro') ?? false;
@@ -26,17 +29,20 @@ class _SettingsList extends State<SettingsList> {
     });
   }
 
+  // Save new gyro setting to SharedPreferences
   Future<void> _saveSwitchValue(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('gyro', value);
   }
 
+  // List of settings (only the first item is active)
   final List<CardOption> settings = [
     CardOption(
       title: "Gyroscope",
       color: const Color.fromARGB(250, 35, 35, 35),
       fontColor: Colors.white,
     ),
+    // The remaining items are placeholders
     CardOption(
       title: "Steering",
       color: const Color.fromARGB(250, 35, 35, 35),
@@ -68,17 +74,20 @@ class _SettingsList extends State<SettingsList> {
       fontColor: Colors.white,
     ),
   ];
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: settings.length,
+      itemCount: settings.length, // Total number of setting cards
       itemBuilder: (context, index) {
         final setting = settings[index];
+
         return Container(
           margin: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.1,
-              left: MediaQuery.of(context).size.height * 0.2,
-              right: MediaQuery.of(context).size.height * 0.2),
+            top: MediaQuery.of(context).size.height * 0.1,
+            left: MediaQuery.of(context).size.height * 0.2,
+            right: MediaQuery.of(context).size.height * 0.2,
+          ),
           height: MediaQuery.of(context).size.height * 0.15,
           child: Card(
             color: setting.color,
@@ -86,10 +95,10 @@ class _SettingsList extends State<SettingsList> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween, // Texte links ausrichten
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (index == 0)
+                  // Show title only for Gyroscope and first Steering card
+                  if (index == 0 || index == 1)
                     Text(
                       setting.title,
                       style: TextStyle(
@@ -98,24 +107,18 @@ class _SettingsList extends State<SettingsList> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
+                  // Show CustomSwitch only for Gyroscope
                   if (index == 0)
                     CustomSwitch(
-                        value: _enable,
-                        onChanged: (bool val) {
-                          setState(() {
-                            _enable = val;
-                          });
-                          _saveSwitchValue(val);
-                          widget.onSwitchChanged(val);
-                        }),
-                  if (index == 1)
-                    Text(
-                      setting.title,
-                      style: TextStyle(
-                        color: setting.fontColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      value: _enable,
+                      onChanged: (bool val) {
+                        setState(() {
+                          _enable = val;
+                        });
+                        _saveSwitchValue(val); // Save to preferences
+                        widget.onSwitchChanged(val); // Notify parent
+                      },
                     ),
                 ],
               ),
@@ -127,6 +130,7 @@ class _SettingsList extends State<SettingsList> {
   }
 }
 
+// Class to represent settings card data
 class CardOption {
   final String title;
   final Color color;
@@ -139,28 +143,32 @@ class CardOption {
   });
 }
 
+// Custom switch widget with animation
 class CustomSwitch extends StatefulWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const CustomSwitch({Key? key, required this.value, required this.onChanged})
-      : super(key: key);
+  const CustomSwitch({Key? key, required this.value, required this.onChanged}) : super(key: key);
 
   @override
   _CustomSwitchState createState() => _CustomSwitchState();
 }
 
-class _CustomSwitchState extends State<CustomSwitch>
-    with SingleTickerProviderStateMixin {
+class _CustomSwitchState extends State<CustomSwitch> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Alignment> _circleAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 60), vsync: this);
 
+    // Set up animation controller
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 60),
+      vsync: this,
+    );
+
+    // Define animation direction based on current value
     _circleAnimation = AlignmentTween(
       begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
       end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
@@ -169,16 +177,15 @@ class _CustomSwitchState extends State<CustomSwitch>
       curve: Curves.linear,
     ));
 
-    if (widget.value) {
-      _animationController.value = 1.0;
-    } else {
-      _animationController.value = 0.0;
-    }
+    // Set initial position of the switch
+    _animationController.value = widget.value ? 1.0 : 0.0;
   }
 
   @override
   void didUpdateWidget(CustomSwitch oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    // Rebuild animation if value changes
     if (widget.value != oldWidget.value) {
       _circleAnimation = AlignmentTween(
         begin: widget.value ? Alignment.centerLeft : Alignment.centerRight,
@@ -188,11 +195,8 @@ class _CustomSwitchState extends State<CustomSwitch>
         curve: Curves.linear,
       ));
 
-      if (widget.value) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
+      // Play animation in the correct direction
+      widget.value ? _animationController.forward() : _animationController.reverse();
     }
   }
 
@@ -204,7 +208,7 @@ class _CustomSwitchState extends State<CustomSwitch>
         return GestureDetector(
           onTap: () {
             final newValue = !widget.value;
-            widget.onChanged(newValue);
+            widget.onChanged(newValue); // Toggle the switch
           },
           child: Container(
             width: 45.0,
@@ -216,8 +220,7 @@ class _CustomSwitchState extends State<CustomSwitch>
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Align(
-                alignment:
-                    widget.value ? Alignment.centerRight : Alignment.centerLeft,
+                alignment: widget.value ? Alignment.centerRight : Alignment.centerLeft,
                 child: Container(
                   width: 20.0,
                   height: 20.0,
