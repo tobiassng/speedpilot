@@ -1,158 +1,155 @@
-# SpeedPilot 🚗📶  
-**SpeedPilot** is a Flutter-based iOS app designed to control an RC car over WiFi using a direct Access Point connection. This guide walks you through installing Flutter, preparing your environment, and running the app on a real iPhone.
+# 🛰️ Remote Vehicle Control App
+
+Eine Flutter-basierte mobile Applikation zur Fernsteuerung eines Fahrzeugs, ausgestattet mit Live-Sensorintegration, Kartenvisualisierung und Joystick-/Gyroskopsteuerung.
 
 ---
 
-## 🛠 Prerequisites
+## 📁 Projektstruktur
 
-### ✅ Install Flutter SDK
-
-Follow the official installation steps for macOS:  
-🔗 https://docs.flutter.dev/get-started/install/macos
-
-Then verify everything with:
-
-```bash
-flutter doctor
 ```
-
-Make sure the following items are listed as complete (✓):
-
-- Flutter
-- Xcode
-- CocoaPods
-- iOS toolchain
-
-### ✅ Install Xcode & Command Line Tools
-
-1. Install Xcode from the Mac App Store.
-2. Open it once to accept the license terms.
-3. Install CLI tools:
-
-```bash
-xcode-select --install
+lib/
+├── main.dart                      # Einstiegspunkt der App
+├── starting_page/                # Startbildschirm und Geräteverbindung
+│   ├── starting_page.dart
+│   └── features/
+│       ├── device_list.dart      # Anzeige von vorhandenen Autos mir IP-Adresse
+│       └── user_dialogue.dart    # Nutzerabfragen & Dialoge
+├── driving_page/                 # Steuerungsseite für das Fahrzeug
+│   ├── joystick_page.dart        # Joystick-basierte Steuerung
+│   ├── gyroscope_page.dart       # Steuerung über Gyroskop
+│   └── features/
+│       ├── gas_joystick.dart
+│       ├── steering_joystick.dart
+│       ├── lidar_data.dart
+│       ├── occupancy_grid.dart
+│       ├── tachometer.dart
+│       └── gyroscope_data.dart
+├── map_page/                     # Kartenseite mit Scroll-/Zoom-Funktion
+│   ├── map_scrolling_page.dart
+│   └── features/
+│       └── map_carousel.dart     # Karussell mehrerer Maps
+├── models/
+│   └── card_list.dart            # Datenmodell zum Hinzufügen neuer Karten zur Liste
 ```
-
-### ✅ Install CocoaPods (for iOS dependencies)
-
-```bash
-sudo gem install cocoapods
-```
-
-### ✅ Sign in with Apple ID in Xcode
-
-- Open **Xcode** → **Settings** → **Accounts**
-- Add your Apple ID
-- Create or use an existing Development Team
 
 ---
 
-## 📲 Running SpeedPilot on a Real iOS Device
+## ⚙️ Installation
 
-### 1. Connect Your iPhone
+### Voraussetzungen
 
-- Use a USB cable.
-- Unlock your phone and tap “Trust This Computer” if prompted.
+- [Flutter SDK](https://flutter.dev/docs/get-started/install)
+- Android Studio / Xcode (für Emulatoren oder echte Geräte)
+- Git (optional)
 
-### 2. Trust Your Developer Certificate (first time only)
-
-On the iPhone:
-
-- Go to `Settings > General > VPN & Device Management`
-- Tap your Apple ID under *Developer App* and trust it
-
-### 3. Clone the Repository
+### Schritte
 
 ```bash
-git clone https://github.com/tobiassng/speedpilot.git
-cd speedpilot
+# 1. Projekt klonen
+git clone <repo-url>
+cd <projektverzeichnis>
+
+# 2. Flutter-Abhängigkeiten installieren
+flutter pub get
+
+# 3. Plattform-spezifische Abhängigkeiten vorbereiten
+flutter clean
 flutter pub get
 ```
 
-### 4. Configure iOS Project (one-time setup in Xcode)
+---
 
-Open the iOS workspace:
+## 🚀 Ausführung
+
+### Android Emulator
 
 ```bash
-open ios/Runner.xcworkspace
+flutter emulators --launch <emulator_id>
+flutter run
 ```
 
-In Xcode:
+> Alternativ im Android Studio über den Button **"Run"** starten
 
-- Click on the "Runner" project in the left sidebar
-- Go to the "Signing & Capabilities" tab
-- Select your Apple Developer Team
+---
 
-Then close Xcode.
+### iOS Simulator
 
-### 5. Run the App on Your iPhone
+```bash
+open -a Simulator
+flutter run
+```
 
-With your iPhone still connected:
+> Hinweis: Für iOS wird ein Mac mit Xcode benötigt.
+
+---
+
+### Echtes Android-Gerät
+
+1. USB-Debugging aktivieren
+2. Gerät über USB verbinden
+3. Mit `flutter devices` sicherstellen, dass es erkannt wird
+4. Dann:
 
 ```bash
 flutter run
 ```
 
-If you have more than one device connected:
+---
+
+### Echtes iOS-Gerät
+
+1. Apple Developer-Konto notwendig
+2. Zertifikate in Xcode konfigurieren
+3. Gerät anschließen und autorisieren
+4. Ausführung via Xcode oder:
 
 ```bash
-flutter devices
-flutter run -d <device-id>
+flutter run
 ```
 
 ---
 
-## 🌐 WiFi Setup (Access Point Mode)
+## 🧭 Nutzung
 
-1. Power on your RC car. It should create a local WiFi hotspot (Access Point).
-2. On your iPhone, go to **Settings > Wi-Fi**
-3. Connect to the RC car’s WiFi network (e.g. `RC-CAR-AP` or similar)
-4. Start the **SpeedPilot** app – it communicates directly with the car via the local WiFi link.
+1. **Startseite**  
+   → Geräte werden gescannt und verbunden
 
-> 📶 Internet is not required, since all communication happens over the local access point.
+2. **Fahrsteuerung**  
+   → Joystick: Gaspedal, Lenkung, Anzeige von Lidar und Gyroskopdaten  
+   → Alternativsteuerung: Gyroskop-basierte Eingabe
 
----
-
-## 🧪 Troubleshooting
-
-- Ensure you're connected to the RC car’s WiFi before launching the app.
-- If you encounter iOS build issues:
-  ```bash
-  flutter clean
-  flutter pub get
-  ```
-- Check that your Flutter and Xcode setup is complete:
-  ```bash
-  flutter doctor
-  ```
+3. **Kartenansicht**  
+   → Anzeige von Kartenmaterial, Karussell-Ansicht und Zoom/Scroll-Funktion
 
 ---
 
-## 📦 Useful Commands
+## 👨‍💻 Mitwirkende
 
-```bash
-flutter doctor       # Diagnose Flutter installation
-flutter devices      # List available devices
-flutter pub get      # Install dependencies
-flutter run          # Build and run the app
-flutter clean        # Clean build artifacts
+- **Tobias Schilling**
+- **Max Domitrovic**
+
+---
+
+## 📄 Lizenz
+
+Dieses Projekt steht unter der **MIT-Lizenz**:
+
+```
+MIT License
+
+Copyright (c) 2025 Tobias Schilling, Max Domitrovic
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction...
 ```
 
 ---
 
-## 📁 Project Structure
+## ❓ FAQ
 
-```
-speedpilot/
-├── lib/              # Dart source code
-├── ios/              # iOS-specific setup
-├── android/          # Android-specific setup (optional)
-├── pubspec.yaml      # Project metadata and dependencies
-└── README.md         # This file
-```
+**Q: Muss ich native SDKs installieren?**  
+A: Ja, Flutter benötigt Android SDK und Xcode für native Builds.
 
----
-
-## 📄 License
-
-MIT License © [Your Name or Company]
+**Q: Kann ich das Projekt im Web laufen lassen?**  
+A: Aktuell ist es für Android und iOS optimiert. Web-Support wäre möglich, ist aber nicht enthalten.
