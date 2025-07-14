@@ -208,17 +208,17 @@ class _DeviceOptions extends State<DeviceOptions> {
                   },
                   child: Row(
                     children: [
-                      // Red status dot
+                      // Status dot: red by default, turns green when connected
                       Container(
                         margin: const EdgeInsets.only(left: 25),
                         width: 24.0,
                         height: 30.0,
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: isConnected[0] ? Colors.green : Colors.red,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.red.withOpacity(0.8),
+                              color: (isConnected[0] ? Colors.green : Colors.red).withOpacity(0.8),
                               spreadRadius: 10,
                               blurRadius: 20,
                               offset: const Offset(0, 0),
